@@ -6,118 +6,201 @@
     <title>My Portfolio</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
     <style>
-        /* Reset defaults to ensure full screen usage */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        /* 1. CSS VARIABLES (The Theme Engine) */
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --glass-bg: rgba(255, 255, 255, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --accent-color: #000000;
+            --btn-text: #ffffff;
+            --particle-color: #888888; /* Grey works for both modes */
         }
+
+        /* The Dark Mode Definitions */
+        .dark-mode {
+            --bg-color: #1a1a1a;
+            --text-color: #ffffff;
+            --glass-bg: rgba(30, 30, 30, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --accent-color: #ffffff;
+            --btn-text: #000000;
+            --particle-color: #bbbbbb;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body, html {
             height: 100%;
-            font-family: 'Inter', sans-serif; /* Professional font */
-            overflow: hidden; /* Prevents scrollbars if not needed */
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            transition: background-color 0.3s ease; /* Smooth fade when switching themes */
+            overflow: hidden;
         }
 
-        /* The container for the animated background */
-        #background-animation {
+        /* Background Container */
+        #particles-js {
             position: absolute;
             width: 100%;
             height: 100%;
-            z-index: -1; /* Puts it behind everything */
+            z-index: -1;
         }
 
-        /* The Main Flexbox Container - Centers your content card */
+        /* Center Layout */
         .main-container {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh; /* Full Viewport Height */
+            height: 100vh;
             padding: 20px;
         }
 
-        /* The "Glass" Card */
-        .content-card {
-            background: rgba(255, 255, 255, 0.85); /* White, 85% opacity */
-            backdrop-filter: blur(10px); /* The "Frosted Glass" effect */
-            padding: 40px 60px;
-            border-radius: 20px; /* Smooth corners */
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1); /* Soft shadow for depth */
-            max-width: 600px;
+        /* The Glass Card */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px); /* Safari support */
+            padding: 50px;
+            border-radius: 24px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            max-width: 700px;
+            width: 100%;
             text-align: center;
-            color: #333;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            position: relative;
         }
 
-        h1 {
-            font-weight: 600;
-            margin-bottom: 15px;
-            font-size: 2.5rem;
-            letter-spacing: -0.5px; /* Tighter letters look more modern */
+        /* Navigation Pills */
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
         }
 
-        p {
-            font-weight: 300;
-            font-size: 1.1rem;
-            line-height: 1.6;
-            color: #555;
-            margin-bottom: 25px;
-        }
-
-        .btn {
-            display: inline-block;
+        .nav-btn {
             text-decoration: none;
-            background: #222;
-            color: #fff;
-            padding: 12px 24px;
+            color: var(--text-color);
+            padding: 8px 20px;
             border-radius: 50px;
-            font-weight: 500;
-            transition: transform 0.2s ease;
+            border: 1px solid var(--text-color);
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
         }
 
-        .btn:hover {
-            transform: translateY(-2px); /* Subtle lift on hover */
-            background: #000;
+        .nav-btn:hover, .nav-btn.active {
+            background: var(--accent-color);
+            color: var(--btn-text);
+            border-color: var(--accent-color);
         }
+
+        h1 { font-size: 2.5rem; margin-bottom: 15px; }
+        p { font-size: 1.1rem; line-height: 1.6; margin-bottom: 25px; opacity: 0.9; }
+
+        /* Theme Toggle Button (Top Right of Card) */
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--text-color);
+        }
+
     </style>
 </head>
 <body>
 
-    <div id="background-animation"></div>
+    <div id="particles-js"></div>
 
     <div class="main-container">
-        <div class="content-card">
-            <h1>Welcome.</h1>
+        <div class="glass-card">
+            
+            <button class="theme-toggle" onclick="toggleTheme()" id="theme-icon">🌙</button>
+
+            <div class="nav-container">
+                <a href="index.html" class="nav-btn active">Home</a>
+                <a href="projects.html" class="nav-btn">Projects</a>
+                <a href="cv.html" class="nav-btn">CV</a>
+            </div>
+
+            <h1>Hello, I'm [Your Name]</h1>
             <p>
-                I am a designer and developer passionate about building clean, modern web experiences. 
-                Move your mouse around to interact with the background mesh.
+                Welcome to my digital space. I build responsive, interactive web experiences. 
+                Try moving your cursor around—the background mesh will react and ripple away from your mouse.
             </p>
-            <a href="https://github.com/yourusername" class="btn">View My GitHub</a>
+            
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.net.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    
     <script>
-        VANTA.NET({
-            el: "#background-animation",
-            mouseControls: true,
-            touchControls: true,
-            gyroControls: false,
-            minHeight: 200.00,
-            minWidth: 200.00,
-            scale: 1.00,
-            scaleMobile: 1.00,
-            color: 0x333333,       /* Color of the mesh lines */
-            backgroundColor: 0xffffff, /* Background color behind the mesh */
-            points: 12.00,        /* How many dots in the mesh */
-            maxDistance: 22.00,   /* How far lines stretch */
-            spacing: 10.00        /* Space between dots */
-        })
+        /* 1. THEME TOGGLE LOGIC */
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('theme-icon');
+            
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                icon.innerHTML = '☀️'; // Switch to Sun icon
+            } else {
+                icon.innerHTML = '🌙'; // Switch to Moon icon
+            }
+        }
+
+        /* 2. PARTICLES CONFIGURATION (The Physics) */
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": "#888888" },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.5 },
+                "size": { "value": 3, "random": true },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#888888",
+                    "opacity": 0.4,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 2, // How fast the idle wave is
+                    "direction": "none",
+                    "random": false,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false,
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": { 
+                        "enable": true, 
+                        "mode": "repulse" /* THIS IS THE REPEL EFFECT */
+                    },
+                    "onclick": { "enable": true, "mode": "push" },
+                    "resize": true
+                },
+                "modes": {
+                    "repulse": { 
+                        "distance": 100, /* Radius of the repel wave */
+                        "duration": 0.4 
+                    }
+                }
+            },
+            "retina_detect": true
+        });
     </script>
 </body>
 </html>
