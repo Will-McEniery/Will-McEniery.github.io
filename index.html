@@ -1,21 +1,123 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>My First GitHub Site</title>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
     <style>
-      body {
-        font-family: sans-serif;
-        text-align: center;
-        margin-top: 50px;
-        background-color: #f0f0f0;
-      }
-      h1 {
-        color: #333;
-      }
+        /* Reset defaults to ensure full screen usage */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            font-family: 'Inter', sans-serif; /* Professional font */
+            overflow: hidden; /* Prevents scrollbars if not needed */
+        }
+
+        /* The container for the animated background */
+        #background-animation {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Puts it behind everything */
+        }
+
+        /* The Main Flexbox Container - Centers your content card */
+        .main-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Full Viewport Height */
+            padding: 20px;
+        }
+
+        /* The "Glass" Card */
+        .content-card {
+            background: rgba(255, 255, 255, 0.85); /* White, 85% opacity */
+            backdrop-filter: blur(10px); /* The "Frosted Glass" effect */
+            padding: 40px 60px;
+            border-radius: 20px; /* Smooth corners */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); /* Soft shadow for depth */
+            max-width: 600px;
+            text-align: center;
+            color: #333;
+        }
+
+        h1 {
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 2.5rem;
+            letter-spacing: -0.5px; /* Tighter letters look more modern */
+        }
+
+        p {
+            font-weight: 300;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 25px;
+        }
+
+        .btn {
+            display: inline-block;
+            text-decoration: none;
+            background: #222;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: transform 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px); /* Subtle lift on hover */
+            background: #000;
+        }
     </style>
-  </head>
-  <body>
-    <h1>Hello, World!</h1>
-    <p>This website is hosted on GitHub Pages.</p>
-  </body>
+</head>
+<body>
+
+    <div id="background-animation"></div>
+
+    <div class="main-container">
+        <div class="content-card">
+            <h1>Welcome.</h1>
+            <p>
+                I am a designer and developer passionate about building clean, modern web experiences. 
+                Move your mouse around to interact with the background mesh.
+            </p>
+            <a href="https://github.com/yourusername" class="btn">View My GitHub</a>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.net.min.js"></script>
+
+    <script>
+        VANTA.NET({
+            el: "#background-animation",
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            scale: 1.00,
+            scaleMobile: 1.00,
+            color: 0x333333,       /* Color of the mesh lines */
+            backgroundColor: 0xffffff, /* Background color behind the mesh */
+            points: 12.00,        /* How many dots in the mesh */
+            maxDistance: 22.00,   /* How far lines stretch */
+            spacing: 18.00        /* Space between dots */
+        })
+    </script>
+</body>
 </html>
