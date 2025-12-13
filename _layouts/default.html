@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page.title }}</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --glass-bg: rgba(255, 255, 255, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --accent-color: #000000;
+            --btn-text: #ffffff;
+            --particle-color: #888888;
+        }
+
+        .dark-mode {
+            --bg-color: #1a1a1a;
+            --text-color: #ffffff;
+            --glass-bg: rgba(30, 30, 30, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --accent-color: #ffffff;
+            --btn-text: #000000;
+            --particle-color: #bbbbbb;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body, html {
+            height: 100%;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            transition: background-color 0.3s ease;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #particles-js {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%; z-index: 0;
+        }
+
+        .main-container {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+            pointer-events: none; 
+        }
+
+        .glass-card {
+            pointer-events: auto;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 50px;
+            border-radius: 24px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            max-width: 700px;
+            width: 100%;
+            text-align: center;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .nav-btn {
+            text-decoration: none;
+            color: var(--text-color);
+            padding: 8px 20px;
+            border-radius: 50px;
+            border: 1px solid var(--text-color);
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        /* Logic to highlight the active page automatically */
+        .nav-btn:hover {
+            background: var(--accent-color);
+            color: var(--btn-text);
+            border-color: var(--accent-color);
+        }
+        
+        /* This liquid tag checks which page is active */
+        .nav-btn[href="{{ page.url | relative_url }}"] {
+            background: var(--accent-color);
+            color: var(--btn-text);
+            border-color: var(--accent-color);
+        }
+        /* Fallback for exact matches */
+        .nav-btn[href="{{ page.url }}"] {
+            background: var(--accent-color);
+            color: var(--btn-text);
+            border-color: var(--accent-color);
+        }
+
+        h1 { font-size: 2.5rem; margin-bottom: 15px; }
+        p { font-size: 1.1rem; line-height: 1.6; margin-bottom: 25px; opacity: 0.9; }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px; right: 20px; background: none; border: none; cursor: pointer; font-size: 1.5rem; color: var(--text-color);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="particles-js"></div>
+
+    <div class="main-container">
+        <div class="glass-card">
+            
+            <button class="theme-toggle" onclick="toggleTheme()" id="theme-icon">🌙</button>
+
+            <div class="nav-container">
+                <a href="/index.html" class="nav-btn">Home</a>
+                <a href="/projects.html" class="nav-btn">Projects</a>
+                <a href="/cv.html" class="nav-btn">CV</a>
+            </div>
+
+            {{ content }}
+            
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('theme-icon');
+            body.classList.toggle('dark-mode');
+            icon.innerHTML = body.classList.contains('dark-mode') ? '☀️' : '🌙';
+        }
+
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 80 },
+                "color": { "value": "#888888" },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.5 },
+                "size": { "value": 3 },
+                "line_linked": { "enable": true, "distance": 150, "color": "#888888", "opacity": 0.4, "width": 1 },
+                "move": { "enable": true, "speed": 2 }
+            },
+            "interactivity": {
+                "detect_on": "window",
+                "events": { "onhover": { "enable": true, "mode": "repulse" }, "onclick": { "enable": true, "mode": "push" } },
+                "modes": { "repulse": { "distance": 100, "duration": 0.4 } }
+            }
+        });
+    </script>
+</body>
+</html>
