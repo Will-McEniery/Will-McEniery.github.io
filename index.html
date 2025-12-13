@@ -9,7 +9,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
     <style>
-        /* 1. CSS VARIABLES (The Theme Engine) */
         :root {
             --bg-color: #ffffff;
             --text-color: #333333;
@@ -17,10 +16,9 @@
             --glass-border: rgba(255, 255, 255, 0.5);
             --accent-color: #000000;
             --btn-text: #ffffff;
-            --particle-color: #888888; /* Grey works for both modes */
+            --particle-color: #888888;
         }
 
-        /* The Dark Mode Definitions */
         .dark-mode {
             --bg-color: #1a1a1a;
             --text-color: #ffffff;
@@ -37,32 +35,42 @@
             height: 100%;
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-color);
-            transition: background-color 0.3s ease; /* Smooth fade when switching themes */
+            transition: background-color 0.3s ease;
             overflow: hidden;
+            position: relative; /* Essential for absolute positioning */
         }
 
-        /* Background Container */
+        /* FIXED: Background Container */
         #particles-js {
             position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1;
+            z-index: 0; /* Base layer */
         }
 
-        /* Center Layout */
+        /* FIXED: Center Layout */
         .main-container {
+            position: relative;
+            z-index: 1; /* Sits ON TOP of particles */
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             padding: 20px;
+            /* CRITICAL: Lets mouse pass through empty space to the background */
+            pointer-events: none; 
         }
 
         /* The Glass Card */
         .glass-card {
+            /* We re-enable pointer events so you can click buttons */
+            pointer-events: auto; 
+            
             background: var(--glass-bg);
             backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px); /* Safari support */
+            -webkit-backdrop-filter: blur(12px);
             padding: 50px;
             border-radius: 24px;
             border: 1px solid var(--glass-border);
@@ -75,7 +83,6 @@
             position: relative;
         }
 
-        /* Navigation Pills */
         .nav-container {
             display: flex;
             justify-content: center;
@@ -102,7 +109,6 @@
         h1 { font-size: 2.5rem; margin-bottom: 15px; }
         p { font-size: 1.1rem; line-height: 1.6; margin-bottom: 25px; opacity: 0.9; }
 
-        /* Theme Toggle Button (Top Right of Card) */
         .theme-toggle {
             position: absolute;
             top: 20px;
@@ -113,7 +119,6 @@
             font-size: 1.5rem;
             color: var(--text-color);
         }
-
     </style>
 </head>
 <body>
@@ -143,25 +148,28 @@
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     
     <script>
-        /* 1. THEME TOGGLE LOGIC */
         function toggleTheme() {
             const body = document.body;
             const icon = document.getElementById('theme-icon');
-            
             body.classList.toggle('dark-mode');
             
+            // Toggle icon
             if (body.classList.contains('dark-mode')) {
-                icon.innerHTML = '☀️'; // Switch to Sun icon
+                icon.innerHTML = '☀️';
             } else {
-                icon.innerHTML = '🌙'; // Switch to Moon icon
+                icon.innerHTML = '🌙';
             }
+
+            // Optional: Update particle color on theme switch (Requires reload to be perfect, 
+            // but this keeps the background readable in both modes)
+            // Ideally, you keep particles grey (#888888) as it shows up on both white and black.
         }
 
-        /* 2. PARTICLES CONFIGURATION (The Physics) */
+        /* Initialize Particles */
         particlesJS("particles-js", {
             "particles": {
                 "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
-                "color": { "value": "#888888" },
+                "color": { "value": "#888888" }, /* Keep this neutral grey */
                 "shape": { "type": "circle" },
                 "opacity": { "value": 0.5 },
                 "size": { "value": 3, "random": true },
@@ -174,7 +182,7 @@
                 },
                 "move": {
                     "enable": true,
-                    "speed": 2, // How fast the idle wave is
+                    "speed": 2,
                     "direction": "none",
                     "random": false,
                     "straight": false,
@@ -183,20 +191,14 @@
                 }
             },
             "interactivity": {
-                "detect_on": "canvas",
+                "detect_on": "window", /* FIXED: Detects mouse anywhere on screen */
                 "events": {
-                    "onhover": { 
-                        "enable": true, 
-                        "mode": "repulse" /* THIS IS THE REPEL EFFECT */
-                    },
+                    "onhover": { "enable": true, "mode": "repulse" },
                     "onclick": { "enable": true, "mode": "push" },
                     "resize": true
                 },
                 "modes": {
-                    "repulse": { 
-                        "distance": 100, /* Radius of the repel wave */
-                        "duration": 0.4 
-                    }
+                    "repulse": { "distance": 100, "duration": 0.4 }
                 }
             },
             "retina_detect": true
