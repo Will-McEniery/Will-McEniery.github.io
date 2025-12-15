@@ -141,31 +141,112 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <script>
-        function toggleTheme() {
-            const body = document.body;
-            const icon = document.getElementById('theme-icon');
-            body.classList.toggle('dark-mode');
-            icon.innerHTML = body.classList.contains('dark-mode') ? '☀️' : '🌙';
-        }
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.1/tsparticles.bundle.min.js"></script>
 
-        particlesJS("particles-js", {
-            "particles": {
-                "number": { "value": 80 },
-                "color": { "value": "#888888" },
-                "shape": { "type": "circle" },
-                "opacity": { "value": 0.5 },
-                "size": { "value": 3 },
-                "line_linked": { "enable": true, "distance": 150, "color": "#888888", "opacity": 0.4, "width": 1 },
-                "move": { "enable": true, "speed": 2 }
+<script>
+    // --- PART 1: SMOOTH PAGE TRANSITION SCRIPT ---
+
+    // Listen for clicks on any Navigation Button
+    document.addEventListener('click', e => {
+        const link = e.target.closest('.nav-btn');
+        // If it's a nav button and points to a local page
+        if (link && link.href.startsWith(window.location.origin)) {
+            e.preventDefault(); // STOP the full page reload
+            loadPage(link.href); // Run our custom loader
+            
+            // Update Active State Visuals
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            link.classList.add('active');
+        }
+    });
+
+    // The function that fetches the new page
+    async function loadPage(url) {
+        const contentDiv = document.getElementById('dynamic-content');
+        
+        // 1. Fade out old content
+        contentDiv.style.opacity = '0';
+        
+        // 2. Fetch the new HTML file
+        const response = await fetch(url);
+        const text = await response.text();
+        
+        // 3. Parse the HTML to find the #dynamic-content inside it
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(text, 'text/html');
+        const newContent = doc.getElementById('dynamic-content').innerHTML;
+        const newTitle = doc.title;
+
+        // 4. Update the page (after a tiny delay for the fade)
+        setTimeout(() => {
+            contentDiv.innerHTML = newContent;
+            document.title = newTitle;
+            window.history.pushState({}, '', url); // Update URL bar
+            contentDiv.style.opacity = '1'; // Fade back in
+        }, 300);
+    }
+
+    // Handle "Back" button usage
+    window.onpopstate = () => loadPage(window.location.href);
+
+
+    // --- PART 2: RIGID MESH PHYSICS CONFIGURATION ---
+    
+    tsParticles.load("particles-js", {
+        fpsLimit: 60,
+        fullScreen: { enable: false }, // We handle positioning in CSS
+        particles: {
+            number: { value: 60, density: { enable: true, area: 800 } },
+            color: { value: "#888888" },
+            shape: { type: "circle" },
+            opacity: { value: 0.5 },
+            size: { value: 4 }, // Slightly larger nodes look more "structural"
+            
+            // THE RIGIDITY SETTINGS
+            collisions: {
+                enable: true, // Nodes will now HIT each other
+                mode: "bounce" // And bounce off
             },
-            "interactivity": {
-                "detect_on": "window",
-                "events": { "onhover": { "enable": true, "mode": "repulse" }, "onclick": { "enable": true, "mode": "push" } },
-                "modes": { "repulse": { "distance": 90, "duration": 4.0 } }
+            move: {
+                enable: true,
+                speed: 1, // Slower speed = more stable "structure" feel
+                direction: "none",
+                random: false,
+                straight: false,
+                outModes: { default: "bounce" }, // Bounce off screen edges too
+                attract: { enable: false, rotateX: 600, rotateY: 1200 }
+            },
+            links: {
+                enable: true,
+                distance: 150,
+                color: "#888888",
+                opacity: 0.4,
+                width: 1,
+                triangles: {
+                    enable: false // Set to true if you want filled polygons!
+                }
             }
-        });
-    </script>
+        },
+        interactivity: {
+            events: {
+                onHover: {
+                    enable: true,
+                    mode: "repulse" // The cursor pushes the structure
+                },
+                onClick: { enable: true, mode: "push" },
+                resize: true
+            },
+            modes: {
+                repulse: {
+                    distance: 100,
+                    duration: 0.4,
+                    speed: 1 // Speed of the shockwave
+                }
+            }
+        },
+        detectRetina: true
+    });
+</script>
+    
 </body>
 </html>
