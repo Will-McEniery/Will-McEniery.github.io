@@ -16,7 +16,6 @@
             --glass-border: rgba(255, 255, 255, 0.5);
             --accent-color: #000000;
             --btn-text: #ffffff;
-            --particle-color: #888888;
         }
 
         .dark-mode {
@@ -26,7 +25,6 @@
             --glass-border: rgba(255, 255, 255, 0.1);
             --accent-color: #ffffff;
             --btn-text: #000000;
-            --particle-color: #bbbbbb;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -53,11 +51,11 @@
             align-items: center;
             height: 100vh;
             padding: 20px;
-            pointer-events: none; 
+            pointer-events: none; /* Let mouse pass through to particles */
         }
 
         .glass-card {
-            pointer-events: auto;
+            pointer-events: auto; /* Re-enable mouse for the card */
             background: var(--glass-bg);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
@@ -88,23 +86,17 @@
             border: 1px solid var(--text-color);
             font-size: 0.9rem;
             transition: all 0.2s ease;
+            cursor: pointer;
         }
 
-        /* Logic to highlight the active page automatically */
-        .nav-btn:hover {
+        .nav-btn:hover, .nav-btn.active {
             background: var(--accent-color);
             color: var(--btn-text);
             border-color: var(--accent-color);
         }
-        
-        /* This liquid tag checks which page is active */
+
+        /* Active State Logic for Jekyll */
         .nav-btn[href="{{ page.url | relative_url }}"] {
-            background: var(--accent-color);
-            color: var(--btn-text);
-            border-color: var(--accent-color);
-        }
-        /* Fallback for exact matches */
-        .nav-btn[href="{{ page.url }}"] {
             background: var(--accent-color);
             color: var(--btn-text);
             border-color: var(--accent-color);
@@ -116,10 +108,12 @@
         .theme-toggle {
             position: absolute;
             top: 20px; right: 20px; background: none; border: none; cursor: pointer; font-size: 1.5rem; color: var(--text-color);
+            z-index: 10;
         }
-        
+
+        /* The fade transition wrapper */
         #dynamic-content {
-            transition: opacity 0.3s ease; /* Makes the text fade in/out smoothly */
+            transition: opacity 0.3s ease;
         }
     </style>
 </head>
@@ -129,7 +123,6 @@
 
     <div class="main-container">
         <div class="glass-card">
-            
             <button class="theme-toggle" onclick="toggleTheme()" id="theme-icon">🌙</button>
 
             <div class="nav-container">
@@ -145,112 +138,112 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.1/tsparticles.bundle.min.js"></script>
-
-<script>
-    // --- PART 1: SMOOTH PAGE TRANSITION SCRIPT ---
-
-    // Listen for clicks on any Navigation Button
-    document.addEventListener('click', e => {
-        const link = e.target.closest('.nav-btn');
-        // If it's a nav button and points to a local page
-        if (link && link.href.startsWith(window.location.origin)) {
-            e.preventDefault(); // STOP the full page reload
-            loadPage(link.href); // Run our custom loader
-            
-            // Update Active State Visuals
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            link.classList.add('active');
+    <script>
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('theme-icon');
+            body.classList.toggle('dark-mode');
+            icon.innerHTML = body.classList.contains('dark-mode') ? '☀️' : '🌙';
         }
-    });
+    </script>
 
-    // The function that fetches the new page
-    async function loadPage(url) {
-        const contentDiv = document.getElementById('dynamic-content');
-        
-        // 1. Fade out old content
-        contentDiv.style.opacity = '0';
-        
-        // 2. Fetch the new HTML file
-        const response = await fetch(url);
-        const text = await response.text();
-        
-        // 3. Parse the HTML to find the #dynamic-content inside it
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(text, 'text/html');
-        const newContent = doc.getElementById('dynamic-content').innerHTML;
-        const newTitle = doc.title;
-
-        // 4. Update the page (after a tiny delay for the fade)
-        setTimeout(() => {
-            contentDiv.innerHTML = newContent;
-            document.title = newTitle;
-            window.history.pushState({}, '', url); // Update URL bar
-            contentDiv.style.opacity = '1'; // Fade back in
-        }, 300);
-    }
-
-    // Handle "Back" button usage
-    window.onpopstate = () => loadPage(window.location.href);
-
-
-    // --- PART 2: RIGID MESH PHYSICS CONFIGURATION ---
-    
-    tsParticles.load("particles-js", {
-        fpsLimit: 60,
-        fullScreen: { enable: false }, // We handle positioning in CSS
-        particles: {
-            number: { value: 60, density: { enable: true, area: 800 } },
-            color: { value: "#888888" },
-            shape: { type: "circle" },
-            opacity: { value: 0.5 },
-            size: { value: 4 }, // Slightly larger nodes look more "structural"
-            
-            // THE RIGIDITY SETTINGS
-            collisions: {
-                enable: true, // Nodes will now HIT each other
-                mode: "bounce" // And bounce off
-            },
-            move: {
-                enable: true,
-                speed: 1, // Slower speed = more stable "structure" feel
-                direction: "none",
-                random: false,
-                straight: false,
-                outModes: { default: "bounce" }, // Bounce off screen edges too
-                attract: { enable: false, rotateX: 600, rotateY: 1200 }
-            },
-            links: {
-                enable: true,
-                distance: 150,
-                color: "#888888",
-                opacity: 0.4,
-                width: 1,
-                triangles: {
-                    enable: false // Set to true if you want filled polygons!
-                }
-            }
-        },
-        interactivity: {
-            events: {
-                onHover: {
-                    enable: true,
-                    mode: "repulse" // The cursor pushes the structure
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.1/tsparticles.bundle.min.js"></script>
+    <script>
+        tsParticles.load("particles-js", {
+            fpsLimit: 60,
+            particles: {
+                number: { value: 50, density: { enable: true, area: 800 } },
+                color: { value: "#888888" },
+                shape: { type: "circle" },
+                opacity: { value: 0.5 },
+                size: { value: 5 }, /* Bigger dots = more rigid feel */
+                collisions: {
+                    enable: true, /* TRUE PHYSICS: Nodes bounce off each other */
+                    mode: "bounce"
                 },
-                onClick: { enable: true, mode: "push" },
-                resize: true
-            },
-            modes: {
-                repulse: {
-                    distance: 100,
-                    duration: 0.4,
-                    speed: 1 // Speed of the shockwave
+                move: {
+                    enable: true,
+                    speed: 2,
+                    direction: "none",
+                    random: false,
+                    straight: false,
+                    outModes: { default: "bounce" },
+                    attract: { enable: false }
+                },
+                links: {
+                    enable: true,
+                    distance: 150,
+                    color: "#888888",
+                    opacity: 0.4,
+                    width: 1
                 }
+            },
+            interactivity: {
+                events: {
+                    onHover: { enable: true, mode: "repulse" },
+                    onClick: { enable: true, mode: "push" },
+                    resize: true
+                },
+                modes: {
+                    repulse: { distance: 100, duration: 0.4 }
+                }
+            },
+            detectRetina: true
+        });
+    </script>
+
+    <script>
+        document.addEventListener('click', e => {
+            const link = e.target.closest('.nav-btn');
+            // Only capture links that are internal
+            if (link && link.href.startsWith(window.location.origin)) {
+                e.preventDefault();
+                loadPage(link.href);
             }
-        },
-        detectRetina: true
-    });
-</script>
-    
+        });
+
+        async function loadPage(url) {
+            const contentDiv = document.getElementById('dynamic-content');
+            
+            // 1. Start Fade Out
+            contentDiv.style.opacity = '0';
+
+            try {
+                // 2. Fetch New Page
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('Page not found');
+                
+                const text = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(text, 'text/html');
+                
+                // 3. Find the new content
+                const newContent = doc.getElementById('dynamic-content');
+                if (!newContent) throw new Error('Content missing in target page');
+
+                // 4. Update DOM (after short delay for fade effect)
+                setTimeout(() => {
+                    contentDiv.innerHTML = newContent.innerHTML;
+                    document.title = doc.title;
+                    window.history.pushState({}, '', url);
+                    
+                    // Update Active Buttons
+                    document.querySelectorAll('.nav-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                        if (btn.href === url) btn.classList.add('active');
+                    });
+
+                    contentDiv.style.opacity = '1';
+                }, 300);
+
+            } catch (err) {
+                console.error("Smooth transition failed, forcing reload:", err);
+                // FALLBACK: If anything goes wrong, just load the page normally
+                window.location.href = url;
+            }
+        }
+        
+        window.onpopstate = () => loadPage(window.location.href);
+    </script>
 </body>
 </html>
