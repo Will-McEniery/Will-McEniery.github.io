@@ -148,50 +148,70 @@
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.1/tsparticles.bundle.min.js"></script>
-    <script>
-        tsParticles.load("particles-js", {
-            fpsLimit: 60,
-            particles: {
-                number: { value: 50, density: { enable: true, area: 800 } },
-                color: { value: "#888888" },
-                shape: { type: "circle" },
-                opacity: { value: 0.5 },
-                size: { value: 5 }, /* Bigger dots = more rigid feel */
-                collisions: {
-                    enable: true, /* TRUE PHYSICS: Nodes bounce off each other */
-                    mode: "bounce"
-                },
-                move: {
-                    enable: true,
-                    speed: 2,
-                    direction: "none",
-                    random: false,
-                    straight: false,
-                    outModes: { default: "bounce" },
-                    attract: { enable: false }
-                },
-                links: {
-                    enable: true,
-                    distance: 150,
-                    color: "#888888",
-                    opacity: 0.4,
-                    width: 1
+<script>
+    tsParticles.load("particles-js", {
+        fpsLimit: 60,
+        particles: {
+            // 1. Reduce count slightly to account for larger size
+            number: { value: 40, density: { enable: true, area: 800 } },
+            
+            // 2. THE FORCE FIELD VISUALS
+            color: { value: "transparent" }, // Make the body invisible
+            shape: { 
+                type: "circle",
+                stroke: {
+                    width: 1,          // Thin elegant lines
+                    color: "#888888",  // The visible "node" color
+                    opacity: 0.5
                 }
             },
-            interactivity: {
-                events: {
-                    onHover: { enable: true, mode: "repulse" },
-                    onClick: { enable: true, mode: "push" },
-                    resize: true
-                },
-                modes: {
-                    repulse: { distance: 100, duration: 0.4 }
-                }
+            opacity: { value: 1 }, // Keep stroke visible
+            
+            // 3. THE "POTENTIAL" RADIUS
+            size: { 
+                value: 15, // Large radius = collision happens far from center
+                random: false 
             },
-            detectRetina: true
-        });
-    </script>
-
+            
+            // 4. SOFT COLLISIONS
+            collisions: {
+                enable: true,
+                mode: "bounce",
+            },
+            move: {
+                enable: true,
+                speed: 1.5, // Slower looks heavier/more potential-like
+                direction: "none",
+                random: false,
+                straight: false,
+                outModes: { default: "bounce" },
+            },
+            
+            // 5. LONG RANGE CONNECTIONS
+            links: {
+                enable: true,
+                distance: 180, // Needs to be longer than the new collision distance
+                color: "#888888",
+                opacity: 0.3,
+                width: 1
+            }
+        },
+        interactivity: {
+            events: {
+                // The cursor interaction you liked
+                onHover: { enable: true, mode: "repulse" },
+                onClick: { enable: true, mode: "push" },
+                resize: true
+            },
+            modes: {
+                repulse: { distance: 150, duration: 0.4 }
+            }
+        },
+        detectRetina: true
+    });
+</script>
+    
+    
     <script>
         document.addEventListener('click', e => {
             const link = e.target.closest('.nav-btn');
