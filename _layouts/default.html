@@ -152,20 +152,32 @@
     tsParticles.load("particles-js", {
         fpsLimit: 60,
         particles: {
+            
             // 1. Reduce count slightly to account for larger size
             number: { value: 40, density: { enable: true, area: 800 } },
             
             // 2. THE FORCE FIELD VISUALS
             color: { value: "transparent" }, // Make the body invisible
             shape: { 
-                type: "circle",
-                stroke: {
-                    width: 1,          // Thin elegant lines
-                    color: "#888888",  // The visible "node" color
-                    opacity: 0.5
-                }
+                type: "circle" 
             },
-            opacity: { value: 1 }, // Keep stroke visible
+            color: { value: "#888888" }, // Solid Grey
+            opacity: { value: 1 }, 
+            // The trick: We can't render a dot smaller than its collision radius easily 
+            // in standard config without custom drawing. 
+            // BUT, we can make the opacity very low (0.1) so they look like 
+            // faint "clouds" or potentials that bump into each other.
+            opacity: { value: 0.1 }, 
+            size: { value: 20 },
+            
+            //     type: "circle",
+            //     stroke: {
+            //         width: 1,          // Thin elegant lines
+            //         color: "#888888",  // The visible "node" color
+            //         opacity: 0.5
+            //     }
+            // },
+            // opacity: { value: 1 }, // Keep stroke visible
             
             // 3. THE "POTENTIAL" RADIUS
             size: { 
