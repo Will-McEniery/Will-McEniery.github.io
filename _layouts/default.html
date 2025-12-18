@@ -165,46 +165,94 @@
             }
         });
 
+
         async function loadPage(url) {
-            const contentDiv = document.getElementById('dynamic-content');
+    const contentDiv = document.getElementById('dynamic-content');
+    
+    // 1. Start Fade Out
+    contentDiv.style.opacity = '0';
+
+    try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Page not found');
+        
+        const text = await response.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(text, 'text/html');
+        const newContent = doc.getElementById('dynamic-content');
+        
+        if (!newContent) throw new Error('Content missing');
+
+        setTimeout(() => {
+            // Update Content
+            contentDiv.innerHTML = newContent.innerHTML;
+            document.title = doc.title;
+            window.history.pushState({}, '', url);
             
-            // 1. Start Fade Out
-            contentDiv.style.opacity = '0';
+            // --- FIX: ROBUST ACTIVE CLASS SWAP ---
+            // 1. Remove 'active' from EVERY button
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            
+            // 2. Add 'active' ONLY to the button matching the new path
+            // We compare the "pathname" (e.g., /projects.html) to avoid domain issues
+            const currentPath = new URL(url).pathname;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                const btnPath = new URL(btn.href).pathname;
+                if (btnPath === currentPath) {
+                    btn.classList.add('active');
+                }
+            });
 
-            try {
-                // 2. Fetch New Page
-                const response = await fetch(url);
-                if (!response.ok) throw new Error('Page not found');
-                
-                const text = await response.text();
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(text, 'text/html');
-                
-                // 3. Find the new content
-                const newContent = doc.getElementById('dynamic-content');
-                if (!newContent) throw new Error('Content missing in target page');
+            // Fade back in
+            contentDiv.style.opacity = '1';
+        }, 300);
 
-                // 4. Update DOM (after short delay for fade effect)
-                setTimeout(() => {
-                    contentDiv.innerHTML = newContent.innerHTML;
-                    document.title = doc.title;
-                    window.history.pushState({}, '', url);
+    } catch (err) {
+        console.error("Transition failed:", err);
+        window.location.href = url; // Fallback to normal reload
+    }
+}
+        
+        // async function loadPage(url) {
+        //     const contentDiv = document.getElementById('dynamic-content');
+            
+        //     // 1. Start Fade Out
+        //     contentDiv.style.opacity = '0';
+
+        //     try {
+        //         // 2. Fetch New Page
+        //         const response = await fetch(url);
+        //         if (!response.ok) throw new Error('Page not found');
+                
+        //         const text = await response.text();
+        //         const parser = new DOMParser();
+        //         const doc = parser.parseFromString(text, 'text/html');
+                
+        //         // 3. Find the new content
+        //         const newContent = doc.getElementById('dynamic-content');
+        //         if (!newContent) throw new Error('Content missing in target page');
+
+        //         // 4. Update DOM (after short delay for fade effect)
+        //         setTimeout(() => {
+        //             contentDiv.innerHTML = newContent.innerHTML;
+        //             document.title = doc.title;
+        //             window.history.pushState({}, '', url);
                     
-                    // Update Active Buttons
-                    document.querySelectorAll('.nav-btn').forEach(btn => {
-                        btn.classList.remove('active');
-                        if (btn.href === url) btn.classList.add('active');
-                    });
+        //             // Update Active Buttons
+        //             document.querySelectorAll('.nav-btn').forEach(btn => {
+        //                 btn.classList.remove('active');
+        //                 if (btn.href === url) btn.classList.add('active');
+        //             });
 
-                    contentDiv.style.opacity = '1';
-                }, 300);
+        //             contentDiv.style.opacity = '1';
+        //         }, 300);
 
-            } catch (err) {
-                console.error("Smooth transition failed, forcing reload:", err);
-                // FALLBACK: If anything goes wrong, just load the page normally
-                window.location.href = url;
-            }
-        }
+        //     } catch (err) {
+        //         console.error("Smooth transition failed, forcing reload:", err);
+        //         // FALLBACK: If anything goes wrong, just load the page normally
+        //         window.location.href = url;
+        //     }
+        // }
         
         window.onpopstate = () => loadPage(window.location.href);
     </script>
