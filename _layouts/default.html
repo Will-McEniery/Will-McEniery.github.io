@@ -116,6 +116,11 @@
             transition: opacity 0.3s ease;
         }
     </style>
+
+    {% if page.custom_css %}
+  <link rel="stylesheet" href="{{ '/assets/css/' | append: page.custom_css | append: '.css' | relative_url }}">
+{% endif %}
+    
 </head>
 <body>
 
@@ -153,10 +158,6 @@
 
     {% if page.custom_js %}
   <script src="{{ '/assets/js/' | append: page.custom_js | append: '.js' | relative_url }}"></script>
-    {% endif %}
-
-    {% if page.custom_css %}
-  <script src="{{ '/assets/css/' | append: page.custom_css | append: '.css' | relative_url }}"></script>
     {% endif %}
 
     <script>
