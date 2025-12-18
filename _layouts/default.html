@@ -173,10 +173,10 @@
         });
 
 
-        async function loadPage(url) {
+async function loadPage(url) {
     const contentDiv = document.getElementById('dynamic-content');
     
-    // 1. Start Fade Out
+    // 1. Fade Out
     contentDiv.style.opacity = '0';
 
     try {
@@ -191,32 +191,49 @@
         if (!newContent) throw new Error('Content missing');
 
         setTimeout(() => {
-            // Update Content
+            // 2. Update Content & Title
             contentDiv.innerHTML = newContent.innerHTML;
             document.title = doc.title;
             window.history.pushState({}, '', url);
             
-            // --- FIX: ROBUST ACTIVE CLASS SWAP ---
-            // 1. Remove 'active' from EVERY button
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            // 3. FIX: STRICT NAVIGATION HIGHLIGHTING
             
-            // 2. Add 'active' ONLY to the button matching the new path
-            // We compare the "pathname" (e.g., /projects.html) to avoid domain issues
-            const currentPath = new URL(url).pathname;
+            // A. Get the clean path of the NEW page (e.g., "/projects.html")
+            // We use the URL object to strip "http://mysite.com" and just get the path
+            const newPath = new URL(url, window.location.origin).pathname;
+
+            // B. Loop through all buttons
             document.querySelectorAll('.nav-btn').forEach(btn => {
-                const btnPath = new URL(btn.href).pathname;
-                if (btnPath === currentPath) {
+                // Remove active class from everyone first
+                btn.classList.remove('active');
+
+                // Get the clean path of this button
+                const btnPath = new URL(btn.href, window.location.origin).pathname;
+
+                // C. Compare paths
+                // We add a check for the root "/" vs "/index.html" which are effectively the same
+                const isHome = (newPath === '/' || newPath === '/index.html') && (btnPath === '/' || btnPath === '/index.html');
+                const isMatch = btnPath === newPath;
+
+                if (isHome || isMatch) {
                     btn.classList.add('active');
                 }
             });
 
-            // Fade back in
+            // 4. Fade In
             contentDiv.style.opacity = '1';
+            
+            // 5. Re-run page specific scripts (Typewriter fix)
+            // Since we swapped the content, we need to tell the typewriter script to re-scan the DOM
+            if (typeof initTypewriter === "function") {
+                initTypewriter(); 
+            }
+
         }, 300);
 
     } catch (err) {
         console.error("Transition failed:", err);
-        window.location.href = url; // Fallback to normal reload
+        window.location.href = url; // Fallback to reload
     }
 }
         
