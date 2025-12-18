@@ -1,0 +1,44 @@
+/* The container for each list item */
+.project-item {
+    text-align: left; /* Aligns list to the left */
+    padding: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(0,0,0,0.1); /* Subtle divider line */
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+/* Dark mode support for the divider */
+body.dark-mode .project-item {
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.project-item:hover {
+    background-color: rgba(0,0,0,0.03); /* Subtle highlight on hover */
+    border-radius: 8px;
+}
+
+body.dark-mode .project-item:hover {
+    background-color: rgba(255,255,255,0.05);
+}
+
+.project-item h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+/* The area where text appears */
+.project-desc {
+    margin-top: 10px;
+    font-family: 'Courier New', Courier, monospace; /* Typewriter font! */
+    font-size: 1rem;
+    min-height: 1.5em; /* Reserves space so layout doesn't jump */
+    color: var(--text-color);
+    transition: opacity 0.3s ease; /* The fade out effect */
+}
+
+/* The source text is hidden from the user */
+.hidden-text {
+    display: none;
+}
