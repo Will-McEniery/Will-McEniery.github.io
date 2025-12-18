@@ -151,6 +151,10 @@
 
 <script src="{{ '/assets/js/background.js' | relative_url }}"></script>
 
+    {% if page.custom_js %}
+  <script src="{{ '/assets/js/' | append: page.custom_js | append: '.js' | relative_url }}"></script>
+    {% endif %}
+
     <script>
         document.addEventListener('click', e => {
             const link = e.target.closest('.nav-btn');
