@@ -1,44 +1,49 @@
 /* assets/js/typewriter.js */
 
-const typeSpeed = 30; // Milliseconds per character (lower = faster)
+const typeSpeed = 25; // Faster typing reduces "waiting" feel
 
 document.querySelectorAll('.project-item').forEach(item => {
-    const title = item.querySelector('h3');
     const displayArea = item.querySelector('.project-desc');
-    const sourceText = item.querySelector('.hidden-text').textContent.trim();
+    // We use .innerHTML instead of .textContent to preserve spacing if needed
+    const sourceElement = item.querySelector('.hidden-text'); 
+    
+    // Safety check: ensure elements exist before running
+    if (!displayArea || !sourceElement) return;
+
+    const sourceText = sourceElement.textContent.trim();
     let typeInterval;
 
-    // 1. MOUSE ENTER: Start Typing
     item.addEventListener('mouseenter', () => {
-        // Reset state
+        // 1. Clear any existing intervals immediately
+        clearInterval(typeInterval);
+        
+        // 2. Reset the display
         displayArea.style.opacity = '1';
         displayArea.textContent = ''; 
+        
         let charIndex = 0;
 
-        // Clear any fading/typing from previous events
-        clearInterval(typeInterval);
-
-        // Start the typing loop
+        // 3. Start Typing Loop
         typeInterval = setInterval(() => {
             if (charIndex < sourceText.length) {
                 displayArea.textContent += sourceText.charAt(charIndex);
                 charIndex++;
             } else {
-                clearInterval(typeInterval); // Stop when finished
+                clearInterval(typeInterval);
             }
         }, typeSpeed);
     });
 
-    // 2. MOUSE LEAVE: Fade Out & Reset
     item.addEventListener('mouseleave', () => {
-        clearInterval(typeInterval); // Stop typing immediately
+        clearInterval(typeInterval); // Stop typing
+        displayArea.style.opacity = '0'; // Fade out
         
-        // Fade out whatever text was currently visible
-        displayArea.style.opacity = '0';
-        
-        // Wait for fade to finish (0.3s), then clear text
+        // Clear text after fade completes to prevent layout jumps
         setTimeout(() => {
-            displayArea.textContent = '';
+             // Only clear if the user hasn't hovered back over it
+             if (displayArea.style.opacity === '0') {
+                 displayArea.textContent = '';
+             }
         }, 300);
     });
 });
