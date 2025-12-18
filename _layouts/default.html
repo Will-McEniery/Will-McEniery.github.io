@@ -115,11 +115,13 @@
         #dynamic-content {
             transition: opacity 0.3s ease;
         }
+
+        {% if page.custom_css %}
+      <link rel="stylesheet" href="{{ '/assets/css/' | append: page.custom_css | append: '.css' | relative_url }}">
+    {% endif %}
     </style>
 
-    {% if page.custom_css %}
-  <link rel="stylesheet" href="{{ '/assets/css/' | append: page.custom_css | append: '.css' | relative_url }}">
-{% endif %}
+    
     
 </head>
 <body>
