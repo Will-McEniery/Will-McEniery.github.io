@@ -1,20 +1,42 @@
 ---
 layout: default
 title: My Projects
-custom_js: tilt  #  layout to load 'gallery.js'
+custom_js: typewriter  #  layout to load
+custom_css: projects
 ---
+
+<style>
+    .project-item { text-align: left; padding: 20px; border-bottom: 1px solid rgba(128,128,128,0.2); cursor: pointer; }
+    .project-desc { margin-top: 10px; font-family: monospace; min-height: 20px; transition: opacity 0.3s; }
+    .hidden-text { display: none; }
+</style>
 
 <h1>My Projects</h1>
 <p>Here are some of the things I have been working on/find interesting.</p>
 
-<p>Project 1: This Website...</p>
+<div class="projects-list">
 
-<div class="project-card">
-    <h3>Glass Website</h3>
-    <p>A responsive portfolio built with glassmorphism.</p>
-</div>
+    <div class="project-item">
+        <h3>1. This Website...</h3>
+        <div class="project-desc"></div> <span class="hidden-text">
+            Website details....!!! ipsum laurum etc whatever it is....
+        </span>
+    </div>
 
-<div class="project-card">
-    <h3>Physics Engine</h3>
-    <p>A custom JS simulation of particle physics.</p>
+    <div class="project-item">
+        <h3>2. Neural Network Simulation</h3>
+        <div class="project-desc"></div>
+        <span class="hidden-text">
+            This ain't true, its just here as a placeholder
+        </span>
+    </div>
+
+    <div class="project-item">
+        <h3>3. Placeholder 2 (electric boogaloo)</h3>
+        <div class="project-desc"></div>
+        <span class="hidden-text">
+            deets
+        </span>
+    </div>
+
 </div>
