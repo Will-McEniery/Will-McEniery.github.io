@@ -40,5 +40,5 @@ body.dark-mode .project-item:hover {
 
 /* The source text is hidden from the user */
 .hidden-text {
-    display: none;
+    /* display: none; */
 }
