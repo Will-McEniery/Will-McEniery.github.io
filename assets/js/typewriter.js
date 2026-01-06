@@ -2,8 +2,6 @@ function initTypewriter() {
     const typeSpeed = 25;
 
     document.querySelectorAll('.project-item').forEach(item => {
-        // ... (The rest of your existing typewriter code goes here) ...
-        // Copy the exact code from our previous step
         const displayArea = item.querySelector('.project-desc');
         const sourceElement = item.querySelector('.hidden-text'); 
         
@@ -13,7 +11,7 @@ function initTypewriter() {
         let typeInterval;
 
         item.addEventListener('mouseenter', () => {
-             // ... your mouseenter logic ...
+             // mouseenter logic
              clearInterval(typeInterval);
              displayArea.style.opacity = '1';
              displayArea.textContent = ''; 
@@ -29,7 +27,7 @@ function initTypewriter() {
         });
 
         item.addEventListener('mouseleave', () => {
-             // ... your mouseleave logic ...
+             // mouseleave logic
              clearInterval(typeInterval); 
              displayArea.style.opacity = '0';
              setTimeout(() => {
@@ -41,5 +39,5 @@ function initTypewriter() {
     });
 }
 
-// Run it immediately when the file loads for the first time
+// Run immediately when the file loads for the first time
 initTypewriter();
