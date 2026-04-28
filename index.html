@@ -3,463 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minimalist Portfolio</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary-color: #000000;
-            --secondary-color: #333333;
-            --accent-color: #555555;
-            --background-color: #ffffff;
-            --text-color: #000000;
-            --border-color: #e0e0e0;
-            --shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            --transition: all 0.3s ease;
-        }
-
-        .dark-mode {
-            --primary-color: #ffffff;
-            --secondary-color: #cccccc;
-            --accent-color: #999999;
-            --background-color: #1a1a1a;
-            --text-color: #ffffff;
-            --border-color: #333333;
-            --shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: var(--background-color);
-            color: var(--text-color);
-            line-height: 1.6;
-            transition: var(--transition);
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.5rem 0;
-            border-bottom: 1px solid var(--border-color);
-            margin-bottom: 2rem;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--primary-color);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: var(--text-color);
-            font-weight: 500;
-            transition: var(--transition);
-            position: relative;
-        }
-
-        .nav-links a:hover {
-            color: var(--accent-color);
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background-color: var(--primary-color);
-            transition: var(--transition);
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        .theme-toggle {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 1.5rem;
-            color: var(--text-color);
-            transition: var(--transition);
-        }
-
-        .theme-toggle:hover {
-            transform: rotate(30deg);
-        }
-
-        section {
-            margin-bottom: 3rem;
-        }
-
-        h1, h2, h3 {
-            color: var(--primary-color);
-            margin-bottom: 1.5rem;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-        }
-
-        h2 {
-            font-size: 2rem;
-            position: relative;
-            padding-bottom: 0.5rem;
-        }
-
-        h2::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 50px;
-            height: 3px;
-            background-color: var(--accent-color);
-        }
-
-        .section-content {
-            padding: 1.5rem 0;
-        }
-
-        .projects-grid {
-            display: grid;
-            gap: 2rem;
-        }
-
-        .project-card {
-            background-color: var(--background-color);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 1.5rem;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-        }
-
-        .project-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .project-title {
-            font-size: 1.4rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .project-description {
-            color: var(--secondary-color);
-            margin-bottom: 1rem;
-        }
-
-        .project-tech {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .tech-tag {
-            background-color: rgba(0, 0, 0, 0.05);
-            color: var(--accent-color);
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-        }
-
-        .cv-section {
-            margin-bottom: 2rem;
-        }
-
-        .cv-item {
-            margin-bottom: 1.5rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .cv-item:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-
-        .cv-item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.5rem;
-        }
-
-        .cv-item-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
-
-        .cv-item-subtitle {
-            color: var(--accent-color);
-        }
-
-        .cv-item-date {
-            color: var(--accent-color);
-            font-size: 0.9rem;
-        }
-
-        .cv-item-description {
-            color: var(--secondary-color);
-            margin-top: 0.5rem;
-        }
-
-        .typing-dropdown {
-            position: relative;
-            margin-top: 1rem;
-        }
-
-        .typing-dropdown button {
-            background: none;
-            border: none;
-            color: var(--accent-color);
-            cursor: pointer;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .typing-dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: var(--background-color);
-            min-width: 250px;
-            box-shadow: var(--shadow);
-            border-radius: 8px;
-            padding: 1rem;
-            z-index: 1;
-            margin-top: 0.5rem;
-            border: 1px solid var(--border-color);
-        }
-
-        .typing-dropdown-content.show {
-            display: block;
-        }
-
-        .typing-dropdown-content p {
-            margin-bottom: 0.5rem;
-        }
-
-        footer {
-            text-align: center;
-            padding: 2rem 0;
-            border-top: 1px solid var(--border-color);
-            margin-top: 2rem;
-            color: var(--accent-color);
-            font-size: 0.9rem;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 1rem;
-            }
-            
-            header {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            
-            .nav-links {
-                gap: 1rem;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-            
-            h2 {
-                font-size: 1.5rem;
-            }
-        }
-    </style>
+    <title>University Name - Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="logo">Portfolio</div>
-            <nav class="nav-links">
-                <a href="#projects">Projects</a>
-                <a href="#cv">CV</a>
-                <a href="#contact">Contact</a>
-            </nav>
-            <button class="theme-toggle" id="themeToggle">
-                <i class="fas fa-moon"></i>
-            </button>
-        </header>
+    <!-- Dark mode toggle button -->
+    <button id="darkModeToggle" class="dark-mode-toggle">🌙</button>
+    
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active" data-page="home">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="cv">CV</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="projects">Projects</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
-        <section id="projects">
-            <h2>Projects</h2>
-            <div class="projects-grid">
-                <div class="project-card">
-                    <h3 class="project-title">University Name</h3>
-                    <p class="project-description">Project description for university project</p>
-                    <div class="project-tech">
-                        <span class="tech-tag">HTML</span>
-                        <span class="tech-tag">CSS</span>
-                        <span class="tech-tag">JavaScript</span>
-                    </div>
-                    <p>University project description with detailed information about the work done.</p>
+    <!-- Main content area -->
+    <main class="main-content">
+        <!-- Home Page -->
+        <section id="home-page" class="page active">
+            <h1>Welcome to University Name</h1>
+            <p>This is a showcase of my work and research. Navigate using the menu above to explore my CV and projects.</p>
+            <div class="home-grid">
+                <div class="grid-item">
+                    <h2>Research Focus</h2>
+                    <p>Exploring cutting-edge developments in my field of study.</p>
                 </div>
-                
-                <div class="project-card">
-                    <h3 class="project-title">University Name</h3>
-                    <p class="project-description">Project description for university project</p>
-                    <div class="project-tech">
-                        <span class="tech-tag">React</span>
-                        <span class="tech-tag">Node.js</span>
-                        <span class="tech-tag">MongoDB</span>
-                    </div>
-                    <p>University project description with detailed information about the work done.</p>
+                <div class="grid-item">
+                    <h2>Publications</h2>
+                    <p>View my latest academic contributions.</p>
                 </div>
-                
-                <div class="project-card">
-                    <h3 class="project-title">University Name</h3>
-                    <p class="project-description">Project description for university project</p>
-                    <div class="project-tech">
-                        <span class="tech-tag">Python</span>
-                        <span class="tech-tag">Django</span>
-                        <span class="tech-tag">PostgreSQL</span>
-                    </div>
-                    <p>University project description with detailed information about the work done.</p>
+                <div class="grid-item">
+                    <h2>Collaborations</h2>
+                    <p>Working with leading researchers worldwide.</p>
                 </div>
             </div>
         </section>
 
-        <section id="cv">
-            <h2>Curriculum Vitae</h2>
+        <!-- CV Page -->
+        <section id="cv-page" class="page">
+            <h1>Curriculum Vitae</h1>
             <div class="cv-section">
-                <div class="cv-item">
-                    <div class="cv-item-header">
-                        <h3 class="cv-item-title">University Name</h3>
-                        <span class="cv-item-date">2020 - 2024</span>
-                    </div>
-                    <p class="cv-item-subtitle">Bachelor of Science in Computer Science</p>
-                    <p class="cv-item-description">University program description with details about the curriculum and achievements.</p>
-                    
-                    <div class="typing-dropdown">
-                        <button onclick="toggleDropdown('cv1')">
-                            <i class="fas fa-chevron-down"></i> View Details
-                        </button>
-                        <div class="typing-dropdown-content" id="cv1">
-                            <p>Relevant coursework: Data Structures, Algorithms, Database Systems, Software Engineering</p>
-                            <p>Academic achievements: Dean's List, Academic Excellence Award</p>
-                            <p>Relevant projects: Web application development, Machine learning implementation</p>
-                        </div>
-                    </div>
+                <h2 class="cv-title" data-target="education">Education</h2>
+                <div class="cv-content" id="education">
+                    <p><strong>University Name</strong>, Department of Computer Science</p>
+                    <p>PhD in Computer Science, 2020-2024</p>
+                    <p>Thesis: "Advanced Machine Learning Techniques for Data Analysis"</p>
+                    <p>GPA: 3.9/4.0</p>
                 </div>
-                
-                <div class="cv-item">
-                    <div class="cv-item-header">
-                        <h3 class="cv-item-title">University Name</h3>
-                        <span class="cv-item-date">2018 - 2020</span>
-                    </div>
-                    <p class="cv-item-subtitle">Associate Degree in Computer Science</p>
-                    <p class="cv-item-description">University program description with details about the curriculum and achievements.</p>
-                    
-                    <div class="typing-dropdown">
-                        <button onclick="toggleDropdown('cv2')">
-                            <i class="fas fa-chevron-down"></i> View Details
-                        </button>
-                        <div class="typing-dropdown-content" id="cv2">
-                            <p>Relevant coursework: Programming Fundamentals, Web Development, Database Concepts</p>
-                            <p>Academic achievements: Outstanding Student Award</p>
-                            <p>Relevant projects: Simple web applications, mobile app development</p>
-                        </div>
-                    </div>
+            </div>
+            <div class="cv-section">
+                <h2 class="cv-title" data-target="experience">Experience</h2>
+                <div class="cv-content" id="experience">
+                    <p><strong>Research Assistant</strong>, University Name</p>
+                    <p>June 2022 - Present</p>
+                    <p>Worked on developing novel algorithms for natural language processing.</p>
+                    <p>Published 3 papers in top-tier conferences.</p>
                 </div>
-                
-                <div class="cv-item">
-                    <div class="cv-item-header">
-                        <h3 class="cv-item-title">University Name</h3>
-                        <span class="cv-item-date">2015 - 2018</span>
-                    </div>
-                    <p class="cv-item-subtitle">High School Diploma</p>
-                    <p class="cv-item-description">University program description with details about the curriculum and achievements.</p>
-                    
-                    <div class="typing-dropdown">
-                        <button onclick="toggleDropdown('cv3')">
-                            <i class="fas fa-chevron-down"></i> View Details
-                        </button>
-                        <div class="typing-dropdown-content" id="cv3">
-                            <p>Relevant coursework: Mathematics, Physics, Computer Science</p>
-                            <p>Academic achievements: Academic Excellence Award</p>
-                            <p>Relevant projects: Basic programming projects, science fair participation</p>
-                        </div>
-                    </div>
+            </div>
+            <div class="cv-section">
+                <h2 class="cv-title" data-target="skills">Skills</h2>
+                <div class="cv-content" id="skills">
+                    <p>Programming: Python, JavaScript, C++, Java</p>
+                    <p>Machine Learning: TensorFlow, PyTorch, Scikit-learn</p>
+                    <p>Tools: Git, Docker, AWS, Linux</p>
                 </div>
             </div>
         </section>
 
-        <section id="contact">
-            <h2>Contact</h2>
-            <div class="section-content">
-                <p>University Name</p>
-                <p>Project description for contact information</p>
+        <!-- Projects Page -->
+        <section id="projects-page" class="page">
+            <h1>Projects</h1>
+            <div class="project-list">
+                <div class="project-item" data-target="project1">
+                    <h2>Project Title 1</h2>
+                    <p>Project description</p>
+                    <div class="project-details" id="project1">
+                        <p>This project explores innovative approaches to solving complex problems in the field.</p>
+                        <p>Key technologies used: Python, TensorFlow, Git.</p>
+                        <p>Duration: 6 months</p>
+                    </div>
+                </div>
+                <div class="project-item" data-target="project2">
+                    <h2>Project Title 2</h2>
+                    <p>Project description</p>
+                    <div class="project-details" id="project2">
+                        <p>Developed a scalable solution for processing large datasets efficiently.</p>
+                        <p>Implemented using JavaScript and Node.js.</p>
+                        <p>Impact: Reduced processing time by 70%.</p>
+                    </div>
+                </div>
+                <div class="project-item" data-target="project3">
+                    <h2>Project Title 3</h2>
+                    <p>Project description</p>
+                    <div class="project-details" id="project3">
+                        <p>Created a machine learning model for predictive analytics.</p>
+                        <p>Trained on 50,000+ data points with 92% accuracy.</p>
+                        <p>Published in Journal of Advanced Research.</p>
+                    </div>
+                </div>
             </div>
         </section>
+    </main>
 
-        <footer>
-            <p>&copy; 2024 Portfolio. All rights reserved.</p>
-        </footer>
-    </div>
+    <!-- Grid background -->
+    <div id="grid-background" class="grid-background"></div>
 
-    <script>
-        // Theme toggle functionality
-        const themeToggle = document.getElementById('themeToggle');
-        const themeIcon = themeToggle.querySelector('i');
-        
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-theme');
-            if (document.body.classList.contains('dark-theme')) {
-                themeIcon.classList.remove('fa-moon');
-                themeIcon.classList.add('fa-sun');
-            } else {
-                themeIcon.classList.remove('fa-sun');
-                themeIcon.classList.add('fa-moon');
-            }
-        });
-        
-        // Dropdown functionality
-        function toggleDropdown(id) {
-            const dropdown = document.getElementById(id);
-            dropdown.classList.toggle('show');
-        }
-        
-        // Close dropdowns when clicking outside
-        window.addEventListener('click', (event) => {
-            if (!event.target.matches('.typing-dropdown button')) {
-                const dropdowns = document.getElementsByClassName('typing-dropdown-content');
-                for (let i = 0; i < dropdowns.length; i++) {
-                    const openDropdown = dropdowns[i];
-                    if (openDropdown.classList.contains('show')) {
-                        openDropdown.classList.remove('show');
-                    }
-                }
-            }
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
