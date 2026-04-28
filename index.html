@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Portfolio Website</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="#home">Portfolio</a>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#home" class="nav-link active">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#cv" class="nav-link">CV</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#projects" class="nav-link">Projects</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <!-- Home Section -->
+        <section id="home" class="section active">
+            <div class="section-content">
+                <h1>Welcome to My Portfolio</h1>
+                <p>I'm a passionate developer creating interactive web experiences with cutting-edge technologies.</p>
+                <div class="home-features">
+                    <div class="feature-card">
+                        <h3>Dynamic Background</h3>
+                        <p>Experience a grid that responds to your cursor movements with wave propagation effects.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Expandable Content</h3>
+                        <p>Hover over project items to see detailed information displayed with typing animation.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Future-Proof Design</h3>
+                        <p>Easy to add new pages and content without restructuring the entire site.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CV Section -->
+        <section id="cv" class="section">
+            <div class="section-content">
+                <h1>Curriculum Vitae</h1>
+                <div class="cv-content">
+                    <div class="cv-section">
+                        <h2>Experience</h2>
+                        <div class="cv-item">
+                            <h3>Senior Web Developer</h3>
+                            <p class="cv-date">2020 - Present</p>
+                            <p>Leading development of interactive web applications with modern JavaScript frameworks.</p>
+                        </div>
+                        <div class="cv-item">
+                            <h3>Frontend Developer</h3>
+                            <p class="cv-date">2017 - 2020</p>
+                            <p>Created responsive websites and web applications for various clients.</p>
+                        </div>
+                    </div>
+                    <div class="cv-section">
+                        <h2>Education</h2>
+                        <div class="cv-item">
+                            <h3>Bachelor of Science in Computer Science</h3>
+                            <p class="cv-date">2013 - 2017</p>
+                            <p>University of Technology</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="section">
+            <div class="section-content">
+                <h1>Projects</h1>
+                <div class="projects-container">
+                    <!-- Project 1 -->
+                    <div class="project-item" data-project="project1">
+                        <h3>Interactive Data Visualization</h3>
+                        <p>Real-time data visualization platform with dynamic grid background</p>
+                        <div class="project-details" id="project1-details">
+                            <p>This project features a dynamic grid background that responds to cursor movement with wave propagation effects. Users can interact with data visualizations that update in real-time.</p>
+                            <p>Technologies used: JavaScript, D3.js, WebGL</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Project 2 -->
+                    <div class="project-item" data-project="project2">
+                        <h3>Geodesic Sandbox</h3>
+                        <p>Interactive physics simulation with gravitational effects</p>
+                        <div class="project-details" id="project2-details">
+                            <p>This sandbox environment allows users to place masses that interact with each other through gravitational forces. The grid deforms to show these interactions, creating a visual representation of spacetime curvature.</p>
+                            <p>Technologies used: Three.js, Physics engine, WebGL</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Project 3 -->
+                    <div class="project-item" data-project="project3">
+                        <h3>Portfolio Website</h3>
+                        <p>Responsive portfolio with expandable content and dynamic background</p>
+                        <div class="project-details" id="project3-details">
+                            <p>This portfolio website showcases a future-proof design that's easy to extend with new pages. The dynamic grid background creates an engaging user experience while maintaining clean, readable content.</p>
+                            <p>Technologies used: HTML, CSS, JavaScript, Canvas API</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Canvas for Dynamic Background -->
+    <canvas id="grid-canvas"></canvas>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
