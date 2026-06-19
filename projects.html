@@ -1,0 +1,15 @@
+---
+layout: default
+title: Projects
+---
+<h1>Projects</h1>
+<p>Here is a list of my ongoing and past projects:</p>
+
+<ul>
+    {% for project in site.projects %}
+    <li>
+        <a href="{{ project.url | relative_url }}">{{ project.title }}</a>
+        - <small>{{ project.date | date: "%B %Y" }}</small>
+    </li>
+    {% endfor %}
+</ul>
