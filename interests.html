@@ -1,0 +1,15 @@
+---
+layout: default
+title: Interests
+---
+<h1>Interests</h1>
+<p>Here is a list of my ongoing and past projects:</p>
+
+<ul>
+    {% for project in site.interests %}
+    <li>
+        <a href="{{ interests.url | relative_url }}">{{ interests.title }}</a>
+        - <small>{{ interests.date | date: "%B %Y" }}</small>
+    </li>
+    {% endfor %}
+</ul>
