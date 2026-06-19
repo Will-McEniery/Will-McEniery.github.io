@@ -3,6 +3,4 @@ layout: subpage
 title: Portfolio Website Architecture
 date: 2026-06-19
 ---
-This is a modular project page. 
-
-Because we assigned `layout: subpage` in the header above, this file will automatically get the back button and standard styling without writing any HTML.
+This website is to showcase my interests/research and projects and will be updated and improved on an ongoing basis.
