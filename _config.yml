@@ -1,0 +1,9 @@
+title: Personal Website
+url: "https://will-mceniery.github.io" # Update this to your github pages URL later
+
+# Set up modular collections for your subpages
+collections:
+  projects:
+    output: true
+  interests:
+    output: true
