@@ -2,14 +2,41 @@
 layout: default
 title: Interests
 ---
-<h1>Interests & Research</h1>
-<p>Here are some brief descriptions of my previous research, publications, and topics of interest:</p>
+<h1>Research & Interests</h1>
+<p>Here are some notes on my research and topics of interest.</p>
 
-<ul>
+<div class="filter-controls">
+    <input type="text" id="search-input" placeholder="Search projects by keyword...">
+    <select id="category-filter">
+        <option value="all">All Categories</option>
+        {% assign categories = site.interests | map: "category" | compact | uniq | sort %}
+        {% for category in categories %}
+            <option value="{{ category | downcase }}">{{ category }}</option>
+        {% endfor %}
+    </select>
+</div>
+
+<ul class="item-list">
     {% for project in site.interests %}
-    <li>
-        <a href="{{ interests.url | relative_url }}">{{ interests.title }}</a>
-        - <small>{{ interests.date | date: "%B %Y" }}</small>
+    <li class="list-item" 
+        data-title="{{ project.title | downcase }}" 
+        data-desc="{{ project.description | downcase }}" 
+        data-category="{{ project.category | downcase | default: 'none' }}">
+        
+        <a href="{{ project.url | relative_url }}">
+            <h3>
+                {{ project.title }}
+                <span class="date">{{ project.date | date: "%B %Y" }}</span>
+            </h3>
+            
+            {% if project.category %}
+                <span class="category-tag">{{ project.category }}</span>
+            {% endif %}
+            
+            <p class="description">{{ project.description }}</p>
+        </a>
     </li>
     {% endfor %}
 </ul>
+
+<script src="{{ '/assets/js/filter.js' | relative_url }}"></script>
