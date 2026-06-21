@@ -5,4 +5,4 @@ date: 2026-06-01
 categories: [Non-Profit]
 description: AI-powered helpline for Animal welfare resources.
 ---
-See https://animalparitygroup.com/ for details.
+Click [here](https://animalparitygroup.com/) for details.
