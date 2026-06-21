@@ -9,8 +9,8 @@ title: Interests
     <input type="text" id="search-input" placeholder="Search projects by keyword...">
     <select id="category-filter">
         <option value="all">All Categories</option>
-        {% assign categories = site.interests | map: "category" | compact | uniq | sort %}
-        {% for category in categories %}
+        {% assign all_categories = site.interests | map: "categories" | compact | flatten | uniq | sort %}
+        {% for category in all_categories %}
             <option value="{{ category | downcase }}">{{ category }}</option>
         {% endfor %}
     </select>
@@ -21,7 +21,7 @@ title: Interests
     <li class="list-item" 
         data-title="{{ project.title | downcase }}" 
         data-desc="{{ project.description | downcase }}" 
-        data-category="{{ project.category | downcase | default: 'none' }}">
+        data-categories="{{ project.categories | join: ',' | downcase | default: 'none' }}">
         
         <a href="{{ project.url | relative_url }}">
             <h3>
@@ -29,8 +29,12 @@ title: Interests
                 <span class="date">{{ project.date | date: "%B %Y" }}</span>
             </h3>
             
-            {% if project.category %}
-                <span class="category-tag">{{ project.category }}</span>
+            {% if project.categories %}
+                <div class="tags-container">
+                    {% for cat in project.categories %}
+                        <span class="category-tag">{{ cat }}</span>
+                    {% endfor %}
+                </div>
             {% endif %}
             
             <p class="description">{{ project.description }}</p>
