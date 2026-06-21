@@ -10,12 +10,16 @@ document.addEventListener("DOMContentLoaded", () => {
         listItems.forEach(item => {
             const title = item.getAttribute('data-title') || '';
             const desc = item.getAttribute('data-desc') || '';
-            const category = item.getAttribute('data-category') || '';
+            
+            // Get the comma-separated string and split it into an array
+            const categoriesAttr = item.getAttribute('data-categories') || '';
+            const itemCategories = categoriesAttr.split(',');
 
             const matchesSearch = title.includes(searchTerm) || desc.includes(searchTerm);
-            const matchesCategory = (selectedCategory === 'all') || (category === selectedCategory);
+            
+            // Check if the array includes the selected category, or if 'all' is selected
+            const matchesCategory = (selectedCategory === 'all') || itemCategories.includes(selectedCategory);
 
-            // Show item if it matches both the text search AND the category filter
             if (matchesSearch && matchesCategory) {
                 item.style.display = 'block';
             } else {
@@ -24,7 +28,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Trigger the filter function whenever the user types or changes the dropdown
     if (searchInput && categoryFilter) {
         searchInput.addEventListener('input', filterList);
         categoryFilter.addEventListener('change', filterList);
