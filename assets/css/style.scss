@@ -167,9 +167,16 @@ nav a {
 /* --- Update to List Styling --- */
 .tags-container {
     display: flex;
-    flex-wrap: wrap; /* Allows tags to flow to the next line if needed */
-    gap: 0.5rem; /* Space between tags */
-    margin-bottom: 0.8rem;
+    flex-wrap: wrap; 
+    gap: 0.5rem; 
+    margin-bottom: 0; /* Changed to 0 so it sits flush with the bottom padding */
+}
+
+/* Update the description */
+.item-list .description {
+    margin: 0 0 1rem 0; /* Added a 1rem bottom margin to push the tags down */
+    color: var(--text-muted);
+    line-height: 1.5;
 }
 
 .item-list .category-tag {
