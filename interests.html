@@ -28,6 +28,8 @@ title: Interests
                 {{ project.title }}
                 <span class="date">{{ project.date | date: "%B %Y" }}</span>
             </h3>
+
+            <p class="description">{{ project.description }}</p>
             
             {% if project.categories %}
                 <div class="tags-container">
@@ -36,8 +38,6 @@ title: Interests
                     {% endfor %}
                 </div>
             {% endif %}
-            
-            <p class="description">{{ project.description }}</p>
         </a>
     </li>
     {% endfor %}
