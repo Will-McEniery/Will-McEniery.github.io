@@ -136,7 +136,8 @@ nav a {
 }
 
 .item-list h3 {
-    margin: 0 0 0.5rem 0;
+    /* Padding order: Top | Right | Bottom | Left */
+    margin: 0 0 0.25rem 0;
     font-size: 1.25rem;
     display: flex;
     justify-content: space-between;
@@ -169,7 +170,8 @@ nav a {
 
 /* Update the description */
 .item-list .description {
-    margin: 0 0 1rem 0; /* Added a 1rem bottom margin to push the tags down */
+    /* Padding order: Top | Right | Bottom | Left */
+    margin: 0 0 0.6rem 0;
     color: var(--text-muted);
     line-height: 1.5;
 }
