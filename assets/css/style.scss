@@ -132,7 +132,7 @@ nav a {
     color: inherit;
     display: block; 
     /* Padding order: Top | Right | Bottom | Left */
-    padding: 1.5rem 1rem 0.75rem 1rem; 
+    padding: 1.0rem 1rem 0.65rem 1rem; 
 }
 
 .item-list h3 {
@@ -181,5 +181,5 @@ nav a {
     padding: 0.2rem 0.6rem;
     border-radius: 12px;
     color: var(--text-main);
-    /* Removed the margin-bottom from here, as the tags-container handles spacing now */
+    margin-bottom: 0; /* Ensure this is 0 or completely removed */
 }
