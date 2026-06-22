@@ -130,8 +130,9 @@ nav a {
 .item-list a {
     text-decoration: none;
     color: inherit;
-    display: block; /* Ensures the whole block is clickable */
-    padding: 1.5rem 1rem;
+    display: block; 
+    /* Padding order: Top | Right | Bottom | Left */
+    padding: 1.5rem 1rem 0.75rem 1rem; 
 }
 
 .item-list h3 {
