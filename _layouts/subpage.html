@@ -7,5 +7,19 @@ layout: default
 
 <article>
     <h1>{{ page.title }}</h1>
+    
     {{ content }}
+    
 </article>
+
+{% if page.libraries %}
+    {% for lib in page.libraries %}
+        <script src="{{ lib }}"></script>
+    {% endfor %}
+{% endif %}
+
+{% if page.scripts %}
+    {% for script in page.scripts %}
+        <script src="{{ '/assets/js/' | append: script | relative_url }}"></script>
+    {% endfor %}
+{% endif %}
