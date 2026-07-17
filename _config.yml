@@ -7,3 +7,8 @@ collections:
     output: true
   interests:
     output: true
+
+# Tell Kramdown to preserve LaTeX for MathJax
+markdown: kramdown
+kramdown:
+  math_engine: mathjax
