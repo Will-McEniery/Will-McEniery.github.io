@@ -31,7 +31,7 @@ markdown: kramdown
 kramdown:
   math_engine: mathjax
 
-# Both plugins are on the GitHub Pages allow-list
+# All on the GitHub Pages allow-list
 plugins:
   - jekyll-seo-tag
   - jekyll-sitemap
