@@ -172,7 +172,7 @@ function init() {
         meetingTypes.forEach((type, i) => {
             const id = `type-${type.id || i}`;
             box.append(el('label', { class: 'choice', for: id },
-                el('input', { type: 'radio', name: 'type', id, value: type.label, required: true, checked: i === 0 }),
+                el('input', { type: 'radio', name: 'type', id, value: type.label, required: true, defaultChecked: i === 0 }),
                 el('span', { class: 'choice-text' },
                     el('span', { class: 'choice-label', text: type.label }),
                     type.note ? el('span', { class: 'choice-note', text: type.note }) : null)));
@@ -196,7 +196,7 @@ function init() {
 
         $('duration-options').addEventListener('change', (e) => {
             state.duration = Number(e.target.value);
-            if (state.selection && !canStartAt(state.byStart, state.selection, state.duration, config.slotMinutes)) {
+            if (state.selection !== null && !stillAvailable(state.selection)) {
                 state.selection = null;
                 setStatus(`That time doesn't have room for ${state.duration} minutes, so I've cleared it. Please pick another.`, 'info');
             }

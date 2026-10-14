@@ -37,6 +37,7 @@ function start(canvas) {
     const mass = { x: 0, y: 0, tx: 0, ty: 0, strength: 0, target: 0, placed: false };
     const pebbles = [];
     let rafId = 0;
+    let pointerAttached = false;
     let lastTime = 0;
     let accumulator = 0;
     const frameCosts = [];
@@ -120,6 +121,8 @@ function start(canvas) {
     }
 
     function attachPointer() {
+        if (pointerAttached) return;
+        pointerAttached = true;
         window.addEventListener('pointermove', (e) => {
             if (e.pointerType === 'touch') return; // touch scrolls the page; taps make ripples instead
             const p = toSheet(e.clientX, e.clientY);
