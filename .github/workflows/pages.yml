@@ -1,0 +1,81 @@
+name: Build site
+
+# Every push and pull request: run the unit tests and do a real Jekyll build (same gems as GitHub Pages).
+#
+# Deployment from this workflow is OFF until you opt in, so it can't clash with the current
+# "Deploy from a branch" Pages setup. To switch (needed for automatic calendar sync):
+#   1. Settings -> Pages -> Build and deployment -> Source: "GitHub Actions"
+#   2. Settings -> Secrets and variables -> Actions -> Variables -> New variable: PAGES_DEPLOY = actions
+# Then pushes to main deploy from here, and the schedule below refreshes calendar busy times.
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: "17,47 * * * *" # every 30 minutes (only does anything once PAGES_DEPLOY = actions)
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    if: github.event_name != 'schedule' || vars.PAGES_DEPLOY == 'actions'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install tooling
+        run: npm ci
+
+      - name: Unit tests
+        run: npm test
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+
+      - name: Jekyll build
+        env:
+          JEKYLL_ENV: production
+        run: |
+          set -o pipefail
+          if ! bundle exec jekyll build --trace 2>&1 | tee jekyll.log; then
+            # Put the tail of the log in an annotation so it's readable from the run summary
+            echo "::error title=Jekyll build failed::$(tail -n 40 jekyll.log | sed -e ':a;N;$!ba;s/%/%25/g;s/\r/%0D/g;s/\n/%0A/g')"
+            exit 1
+          fi
+          grep -i "warning" jekyll.log | while read -r line; do echo "::warning title=Jekyll::$line"; done || true
+
+      - name: Check the built site
+        run: node scripts/check-site.mjs _site
+
+      - name: Upload site artifact
+        if: github.ref == 'refs/heads/main' && vars.PAGES_DEPLOY == 'actions'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    if: github.ref == 'refs/heads/main' && vars.PAGES_DEPLOY == 'actions'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
