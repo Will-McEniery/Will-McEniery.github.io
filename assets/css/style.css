@@ -62,20 +62,28 @@
     color-scheme: dark;
 }
 
-/* Fallback when the theme script can't run */
+/* Fallback when the theme script can't run (same values as above) */
 @media (prefers-color-scheme: dark) {
     :root:not([data-theme]) {
         --bg: #060911;
         --surface: rgba(12, 17, 29, 0.74);
         --surface-solid: #0d1322;
+        --surface-hover: rgba(148, 163, 184, 0.07);
         --text: #e7ebf3;
         --muted: #a3acbf;
         --faint: #7d879c;
         --border: rgba(148, 163, 184, 0.16);
+        --border-strong: rgba(148, 163, 184, 0.32);
         --accent: #67e8f9;
+        --accent-hover: #a5f3fc;
         --accent-ink: #04222a;
         --accent-soft: rgba(103, 232, 249, 0.12);
+        --danger: #fda29b;
+        --success: #75e0a7;
+        --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 20px 60px rgba(0, 0, 0, 0.45);
         --grid-rgb: 103, 232, 249;
+        --grid-alpha: 0.42;
+        --mass-rgb: 251, 191, 36;
         color-scheme: dark;
     }
 }
@@ -84,6 +92,8 @@
    Base
    ========================================================================= */
 *, *::before, *::after { box-sizing: border-box; }
+
+[hidden] { display: none !important; }
 
 html {
     -webkit-text-size-adjust: 100%;
@@ -426,7 +436,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible {
     max-width: 38rem;
 }
 
-.home .prose h2 { margin-top: 0; }
+.page-home .prose h2 { margin-top: 0; }
 
 .link-grid {
     list-style: none;

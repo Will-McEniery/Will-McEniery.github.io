@@ -4,18 +4,26 @@
 import ICAL from 'ical.js';
 import { zonedToUtc, startOfDay, isValidTimeZone } from '../../assets/js/booking/tz.js';
 
-const MAX_OCCURRENCES = 5000;
+// Safety limits for runaway recurrence rules. Occurrences before the window don't count towards
+// MAX_IN_WINDOW, so a daily event that started decades ago still expands into the window.
+const MAX_ITERATIONS = 200000;
+const MAX_IN_WINDOW = 5000;
 
 function prop(component, name) {
     const value = component.getFirstPropertyValue(name);
     return value === null || value === undefined ? '' : String(value).toUpperCase();
 }
 
-// Events marked "free" (Google/Apple: TRANSP:TRANSPARENT, Outlook: BUSYSTATUS FREE) or cancelled don't block time.
-function blocksTime(component) {
+// Events marked "free" (Google/Apple: TRANSP:TRANSPARENT, Outlook: BUSYSTATUS FREE), cancelled
+// events, and invitations the owner declined don't block time.
+function blocksTime(component, ownerEmails) {
     if (prop(component, 'status') === 'CANCELLED') return false;
     if (prop(component, 'transp') === 'TRANSPARENT') return false;
     if (prop(component, 'x-microsoft-cdo-busystatus') === 'FREE') return false;
+    for (const attendee of component.getAllProperties('attendee')) {
+        const email = String(attendee.getFirstValue() || '').replace(/^mailto:/i, '').toLowerCase();
+        if (ownerEmails.has(email) && String(attendee.getParameter('partstat') || '').toUpperCase() === 'DECLINED') return false;
+    }
     return true;
 }
 
@@ -42,8 +50,13 @@ function mergeIntervals(intervals) {
     return out;
 }
 
-export function extractBusy(icsText, { from, to, ownerZone }) {
+// ownerEmails: addresses that identify the calendar owner among ATTENDEEs (to skip declined
+// invitations). Google names its feeds after the owner's address, so that's picked up too.
+export function extractBusy(icsText, { from, to, ownerZone, ownerEmails = [] }) {
     const root = new ICAL.Component(ICAL.parse(icsText));
+    const owners = new Set(ownerEmails.map((e) => e.trim().toLowerCase()).filter(Boolean));
+    const calendarName = String(root.getFirstPropertyValue('x-wr-calname') || '');
+    if (calendarName.includes('@')) owners.add(calendarName.trim().toLowerCase());
     for (const vtimezone of root.getAllSubcomponents('vtimezone')) {
         ICAL.TimezoneService.register(vtimezone);
     }
@@ -64,7 +77,7 @@ export function extractBusy(icsText, { from, to, ownerZone }) {
 
     const intervals = [];
     const add = (component, start, end) => {
-        if (end > from && start < to && blocksTime(component)) intervals.push([start, end]);
+        if (end > from && start < to && blocksTime(component, owners)) intervals.push([start, end]);
     };
 
     for (const event of [...masters.values(), ...orphans]) {
@@ -76,9 +89,13 @@ export function extractBusy(icsText, { from, to, ownerZone }) {
             continue;
         }
         const iterator = event.iterator();
-        for (let n = 0, next = iterator.next(); next && n < MAX_OCCURRENCES; n++, next = iterator.next()) {
+        let inWindow = 0;
+        for (let n = 0, next = iterator.next(); next && n < MAX_ITERATIONS && inWindow < MAX_IN_WINDOW; n++, next = iterator.next()) {
             // Stop on the original (unmoved) occurrence time; moved exceptions are filtered by add()
-            if (toMs(next, ownerZone) >= to + 2 * 86400000) break;
+            const original = toMs(next, ownerZone);
+            if (original >= to + 2 * 86400000) break;
+            if (original < from - 2 * 86400000) continue; // well before the window: skip cheaply
+            inWindow++;
             const details = event.getOccurrenceDetails(next);
             add(details.item.component, toMs(details.startDate, ownerZone), toMs(details.endDate, ownerZone));
         }

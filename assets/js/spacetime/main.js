@@ -20,7 +20,7 @@ const PEBBLE_TIME = 1.6;        // s; the source rings down, sending out a train
 const PEBBLE_FORCE = 60000;     // px/s^2 peak
 const PEBBLE_DECAY = 0.4;       // s, ring-down time of the source
 const GRID_SPACING = 30;        // px between drawn grid lines (near the screen centre)
-const IDLE_VELOCITY = 0.04;     // px/s RMS; below this the sheet is treated as still
+const IDLE_RATE = 0.25;         // px/s RMS change in height; below this nothing visibly moves, so the loop sleeps
 const INTERACTIVE = 'a, button, input, select, textarea, label, summary, [role="button"], [contenteditable], .no-ripple';
 
 const canvas = document.getElementById('spacetime');
@@ -41,7 +41,7 @@ function start(canvas) {
     let lastTime = 0;
     let accumulator = 0;
     const frameCosts = [];
-    const stats = { frameCost: 0 };
+    const stats = { frameCost: 0, frames: 0 };
 
     readColors();
     build();
@@ -100,6 +100,7 @@ function start(canvas) {
         world.j0 = Math.max(0, world.j0 - ((world.j0 - Math.round(ny / 2)) % world.stride + world.stride) % world.stride);
 
         mass.strength = 0;
+        mass.target = 0;
         mass.placed = false;
         pebbles.length = 0;
         sim.computeHeight();
@@ -123,8 +124,16 @@ function start(canvas) {
     function attachPointer() {
         if (pointerAttached) return;
         pointerAttached = true;
+        // Touch: a finger that lands and lifts without moving is a tap (drop a pebble);
+        // anything else is a scroll and leaves the sheet alone.
+        const taps = new Map();
+
         window.addEventListener('pointermove', (e) => {
-            if (e.pointerType === 'touch') return; // touch scrolls the page; taps make ripples instead
+            if (e.pointerType !== 'mouse') {
+                const tap = taps.get(e.pointerId);
+                if (tap && Math.hypot(e.clientX - tap.x, e.clientY - tap.y) > 10) taps.delete(e.pointerId);
+                return;
+            }
             const p = toSheet(e.clientX, e.clientY);
             if (!p) return;
             mass.tx = p.x;
@@ -135,11 +144,24 @@ function start(canvas) {
         }, { passive: true });
 
         window.addEventListener('pointerdown', (e) => {
-            if (e.button !== 0 && e.pointerType === 'mouse') return;
+            if (e.button !== 0) return;
             if (e.target instanceof Element && e.target.closest(INTERACTIVE)) return;
+            if (e.pointerType === 'mouse') {
+                const p = toSheet(e.clientX, e.clientY);
+                if (p) addPebble(p.x, p.y);
+            } else {
+                taps.set(e.pointerId, { x: e.clientX, y: e.clientY, time: e.timeStamp });
+            }
+        }, { passive: true });
+
+        window.addEventListener('pointerup', (e) => {
+            const tap = taps.get(e.pointerId);
+            taps.delete(e.pointerId);
+            if (!tap || e.timeStamp - tap.time > 600) return;
             const p = toSheet(e.clientX, e.clientY);
             if (p) addPebble(p.x, p.y);
         }, { passive: true });
+        window.addEventListener('pointercancel', (e) => taps.delete(e.pointerId), { passive: true });
 
         const release = () => { mass.target = 0; wake(); };
         document.addEventListener('pointerleave', release);
@@ -159,7 +181,7 @@ function start(canvas) {
             sessionStorage.setItem('spacetime-welcomed', '1');
         } catch (e) { /* storage blocked: show it anyway */ }
         setTimeout(() => {
-            const p = toSheet(window.innerWidth * 0.5, window.innerHeight * 0.82);
+            const p = toSheet(window.innerWidth * 0.1, window.innerHeight * 0.7); // in the margin, beside the card
             if (p) addPebble(p.x, p.y, 0.7);
         }, 500);
     }
@@ -174,7 +196,7 @@ function start(canvas) {
     }
 
     function isActive() {
-        return world.sim.rmsVelocity > IDLE_VELOCITY
+        return world.sim.rmsRate > IDLE_RATE
             || pebbles.length > 0
             || Math.abs(mass.strength - mass.target) > 0.002
             || (mass.strength > 0.002 && Math.hypot(mass.tx - mass.x, mass.ty - mass.y) > 0.05);
@@ -186,7 +208,7 @@ function start(canvas) {
         mass.x += (mass.tx - mass.x) * follow;
         mass.y += (mass.ty - mass.y) * follow;
         mass.strength += (mass.target - mass.strength) * (1 - Math.exp(-dt / MASS_FADE));
-        if (mass.strength > 0.002) {
+        if (mass.placed && mass.strength > 0.002) {
             // Peak pressure that gives a well of depth MASS_DEPTH: depth = p * sigma * sqrt(pi/2) / g
             const pressure = (MASS_DEPTH * GRAVITY) / (MASS_SIGMA * Math.sqrt(Math.PI / 2));
             sim.push(mass.x, mass.y, MASS_SIGMA, pressure * mass.strength, dt);
@@ -233,6 +255,7 @@ function start(canvas) {
     // If this device can't keep up, rebuild once at a coarser resolution.
     function watchPerformance(cost) {
         stats.frameCost = cost;
+        stats.frames++;
         if (quality > 0) return;
         frameCosts.push(cost);
         if (frameCosts.length < 45) return;

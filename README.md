@@ -73,7 +73,8 @@ Busy times come from `_data/busy.json` (start and end times only). You can leave
 4. Push any change (or run the workflow from the Actions tab).
 
 Only start/end times are published (the same as sharing your free/busy status). Events marked as "free",
-and cancelled events, are ignored. GitHub pauses scheduled workflows after 60 days with no commits; the
+cancelled events, and invitations you declined are ignored. Google feeds identify you automatically; for
+Outlook, add a variable `CALENDAR_OWNER_EMAIL` with your address so declined invitations are skipped too. GitHub pauses scheduled workflows after 60 days with no commits; the
 Actions tab has a button to re-enable it.
 
 ## Running it locally

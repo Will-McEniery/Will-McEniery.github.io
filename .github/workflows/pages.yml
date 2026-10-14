@@ -20,7 +20,8 @@ permissions:
 
 concurrency:
   group: pages-${{ github.ref }}
-  cancel-in-progress: true
+  # Never cancel a run on main part-way through: it may be deploying
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   build:
@@ -44,6 +45,7 @@ jobs:
         if: github.ref == 'refs/heads/main'
         env:
           CALENDAR_ICS_URL: ${{ secrets.CALENDAR_ICS_URL }}
+          CALENDAR_OWNER_EMAIL: ${{ vars.CALENDAR_OWNER_EMAIL }} # optional: your address, to skip invitations you declined
         run: npm run sync-calendar
 
       - uses: ruby/setup-ruby@v1
@@ -56,12 +58,13 @@ jobs:
           JEKYLL_ENV: production
         run: |
           set -o pipefail
-          if ! bundle exec jekyll build --trace 2>&1 | tee jekyll.log; then
+          LOG="$RUNNER_TEMP/jekyll.log" # outside the source tree, or Jekyll would publish it
+          if ! bundle exec jekyll build --trace 2>&1 | tee "$LOG"; then
             # Put the tail of the log in an annotation so it's readable from the run summary
-            echo "::error title=Jekyll build failed::$(tail -n 40 jekyll.log | sed -e ':a;N;$!ba;s/%/%25/g;s/\r/%0D/g;s/\n/%0A/g')"
+            echo "::error title=Jekyll build failed::$(tail -n 40 "$LOG" | sed -e ':a;N;$!ba;s/%/%25/g;s/\r/%0D/g;s/\n/%0A/g')"
             exit 1
           fi
-          grep -i "warning" jekyll.log | while read -r line; do echo "::warning title=Jekyll::$line"; done || true
+          grep -i "warning" "$LOG" | while read -r line; do echo "::warning title=Jekyll::$line"; done || true
 
       - name: Check the built site
         run: node scripts/check-site.mjs _site

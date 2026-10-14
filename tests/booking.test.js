@@ -151,3 +151,18 @@ test('a visitor half an hour out of phase (India) still lines up', () => {
     const { rows } = buildWeekGrid(slots, days, visitor, 30);
     assert.deepEqual(rows.map((r) => r.minutes), [270, 300, 330, 360]);
 });
+
+test('when the visitor\'s clocks go back, both copies of the repeated hour are shown', () => {
+    // New York falls back 02:00 EDT -> 01:00 EST on 1 Nov 2026. Brisbane 15:00-17:00 on 1 Nov
+    // = 05:00-07:00 UTC = 01:00, 01:30 EDT then 01:00, 01:30 EST.
+    const config = normaliseConfig({ ...baseConfig, weekly: {}, extra: [{ start: '2026-11-01 15:00', end: '2026-11-01 17:00' }] });
+    const visitor = 'America/New_York';
+    const days = Array.from({ length: 7 }, (_, i) => addDays({ year: 2026, month: 10, day: 26 }, i));
+    const slots = generateSlots(config, { from: startOfDay(days[0], visitor), to: startOfDay(addDays(days[6], 1), visitor), now: NOW });
+    assert.equal(slots.length, 4);
+    const { rows, cells } = buildWeekGrid(slots, days, visitor, 30);
+    assert.deepEqual(rows.map((r) => r.key), ['60', '90', '60b', '90b']);
+    assert.deepEqual(rows.map((r) => iso(cells.get(`6:${r.key}`).start)), [
+        '2026-11-01T05:00:00.000Z', '2026-11-01T05:30:00.000Z', '2026-11-01T06:00:00.000Z', '2026-11-01T06:30:00.000Z',
+    ]);
+});

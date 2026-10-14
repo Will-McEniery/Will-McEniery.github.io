@@ -142,3 +142,41 @@ test('overlapping events merge and events outside the window are dropped', () =>
     assert.ok(busy.some((b) => b.start === '2026-10-24T00:00:00.000Z' && b.end === '2026-10-24T02:00:00.000Z'));
     assert.ok(!busy.some((b) => b.start.startsWith('2027')));
 });
+
+test('daily events that started long ago still expand into the window', () => {
+    const old = `BEGIN:VCALENDAR
+VERSION:2.0
+BEGIN:VEVENT
+UID:old-daily
+DTSTART:19950101T010000Z
+DTEND:19950101T013000Z
+RRULE:FREQ=DAILY
+END:VEVENT
+END:VCALENDAR`;
+    const result = extractBusy(old, { from: Date.parse('2026-10-15T00:00Z'), to: Date.parse('2026-10-22T00:00Z'), ownerZone: 'UTC' });
+    assert.equal(result.length, 7);
+    assert.equal(result[0].start, '2026-10-15T01:00:00.000Z');
+});
+
+test('invitations the owner declined are ignored (owner found from the Google feed name)', () => {
+    const feed = `BEGIN:VCALENDAR
+VERSION:2.0
+X-WR-CALNAME:Owner@Example.com
+BEGIN:VEVENT
+UID:declined
+DTSTART:20261020T010000Z
+DTEND:20261020T020000Z
+ATTENDEE;PARTSTAT=DECLINED:mailto:owner@example.com
+ATTENDEE;PARTSTAT=ACCEPTED:mailto:someone@example.com
+END:VEVENT
+BEGIN:VEVENT
+UID:accepted
+DTSTART:20261021T010000Z
+DTEND:20261021T020000Z
+ATTENDEE;PARTSTAT=ACCEPTED:mailto:owner@example.com
+ATTENDEE;PARTSTAT=DECLINED:mailto:someone@example.com
+END:VEVENT
+END:VCALENDAR`;
+    const result = extractBusy(feed, { from: Date.parse('2026-10-15T00:00Z'), to: Date.parse('2026-10-25T00:00Z'), ownerZone: 'UTC' });
+    assert.deepEqual(result.map((b) => b.start), ['2026-10-21T01:00:00.000Z']);
+});

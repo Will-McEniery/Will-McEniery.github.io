@@ -29,7 +29,12 @@ const to = now + ((Number(config.horizon_weeks) || 6) + 1) * 7 * DAY;
 try {
     const response = await fetch(url.replace(/^webcal:/i, 'https:'), { headers: { 'User-Agent': 'website-calendar-sync' } });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const events = extractBusy(await response.text(), { from, to, ownerZone: config.timezone || 'UTC' });
+    const events = extractBusy(await response.text(), {
+        from,
+        to,
+        ownerZone: config.timezone || 'UTC',
+        ownerEmails: (process.env.CALENDAR_OWNER_EMAIL || '').split(','),
+    });
     fs.writeFileSync(OUT, `${JSON.stringify({ updated: new Date(now).toISOString(), events }, null, 2)}\n`);
     console.log(`Synced ${events.length} busy periods.`);
 } catch (err) {

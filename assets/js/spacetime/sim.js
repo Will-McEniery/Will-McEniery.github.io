@@ -54,7 +54,7 @@ export class WaveSim {
 
         this.height = new Float32Array(this.size);
         this.inverse = new RealInverse2D(nx, ny);
-        this.rmsVelocity = 0;
+        this.rmsRate = 0;
 
         this.setParams(params);
     }
@@ -98,7 +98,7 @@ export class WaveSim {
     reset() {
         this.hRe.fill(0); this.hIm.fill(0); this.vRe.fill(0); this.vIm.fill(0);
         this.height.fill(0);
-        this.rmsVelocity = 0;
+        this.rmsRate = 0;
     }
 
     // Apply a Gaussian pressure patch centred at (x, y) (sheet coordinates, px) for a time dt.
@@ -150,7 +150,7 @@ export class WaveSim {
 
     step() {
         const { size, hRe, hIm, vRe, vIm, m11, m12, m21, m22 } = this;
-        let energy = 0;
+        let change = 0;
         for (let idx = 1; idx < size; idx++) {
             const hr = hRe[idx];
             const hi = hIm[idx];
@@ -160,17 +160,18 @@ export class WaveSim {
             const b = m12[idx];
             const c = m21[idx];
             const d = m22[idx];
-            hRe[idx] = a * hr + b * vr;
-            hIm[idx] = a * hi + b * vi;
-            const nvr = c * hr + d * vr;
-            const nvi = c * hi + d * vi;
-            vRe[idx] = nvr;
-            vIm[idx] = nvi;
-            energy += nvr * nvr + nvi * nvi;
+            const nhr = a * hr + b * vr;
+            const nhi = a * hi + b * vi;
+            hRe[idx] = nhr;
+            hIm[idx] = nhi;
+            vRe[idx] = c * hr + d * vr;
+            vIm[idx] = c * hi + d * vi;
+            change += (nhr - hr) * (nhr - hr) + (nhi - hi) * (nhi - hi);
         }
         hRe[0] = hIm[0] = vRe[0] = vIm[0] = 0;
-        // Parseval: RMS of the real-space velocity field
-        this.rmsVelocity = Math.sqrt(energy) / size;
+        // RMS rate of change of the real-space height (Parseval), in px/s. Unlike the velocity
+        // state, this goes to zero when a steady pressure (the resting cursor) has settled.
+        this.rmsRate = Math.sqrt(change) / size / this.params.dt;
     }
 
     // Real-space height field into this.height (row-major, nx wide).

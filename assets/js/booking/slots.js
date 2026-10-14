@@ -129,15 +129,24 @@ export function canStartAt(slotsByStart, start, durationMinutes, slotMinutes) {
 // Lay a week of slots out for the visitor: 7 day columns (visitor's calendar) and rows of
 // visitor clock times. Long runs of rows with nothing in them are collapsed into a single gap.
 // days: array of 7 {year, month, day} in the visitor's zone.
+// Returns { rows, cells }: each row is { minutes, key } or { gap, from, to }; cells maps
+// `${dayIndex}:${row.key}` -> slot. When the visitor's clocks go back, the repeated hour gets
+// its own rows (key "<minutes>b", repeat: true) right after the first pass through it.
 export function buildWeekGrid(slots, days, visitorZone, slotMinutes) {
-    const cells = new Map(); // `${dayIndex}:${minuteOfDay}` -> slot
+    const cells = new Map();
     const used = new Set();
+    const repeated = new Set();
     for (const slot of slots) {
         const p = getParts(slot.start, visitorZone);
         const dayIndex = days.findIndex((d) => sameDate(d, p));
         if (dayIndex < 0) continue;
         const tod = p.hour * 60 + p.minute;
-        cells.set(`${dayIndex}:${tod}`, slot);
+        if (cells.has(`${dayIndex}:${tod}`)) {
+            cells.set(`${dayIndex}:${tod}b`, slot);
+            repeated.add(tod);
+        } else {
+            cells.set(`${dayIndex}:${tod}`, slot);
+        }
         used.add(tod);
     }
     if (!used.size) return { rows: [], cells };
@@ -150,17 +159,27 @@ export function buildWeekGrid(slots, days, visitorZone, slotMinutes) {
         if (used.has(t)) {
             if (gap) {
                 if (gap.length >= 3) rows.push({ gap: true, from: gap[0], to: gap[gap.length - 1] + slotMinutes });
-                else for (const g of gap) rows.push({ minutes: g });
+                else for (const g of gap) rows.push({ minutes: g, key: String(g) });
                 gap = null;
             }
-            rows.push({ minutes: t });
+            rows.push({ minutes: t, key: String(t) });
         } else {
             (gap ||= []).push(t);
         }
     }
     // Times that don't sit on the row phase (rare: a 30-min DST shift) get their own rows
-    for (const t of times) if (t % slotMinutes !== phase) rows.push({ minutes: t });
+    for (const t of times) if (t % slotMinutes !== phase) rows.push({ minutes: t, key: String(t) });
     rows.sort((a, b) => (a.minutes ?? a.from) - (b.minutes ?? b.from));
+
+    // Second pass through a repeated hour: insert after the last row of each repeated run
+    const repeats = [...repeated].sort((a, b) => a - b);
+    for (let i = 0; i < repeats.length;) {
+        let j = i;
+        while (j + 1 < repeats.length && repeats[j + 1] === repeats[j] + slotMinutes) j++;
+        const after = rows.findIndex((r) => r.minutes === repeats[j]);
+        rows.splice(after + 1, 0, ...repeats.slice(i, j + 1).map((m) => ({ minutes: m, key: `${m}b`, repeat: true })));
+        i = j + 1;
+    }
     return { rows, cells };
 }
 

@@ -191,7 +191,7 @@ function init() {
     // ------------------------------------------------------------ events
 
     function bindEvents() {
-        $('tz-select').addEventListener('change', (e) => setZone(e.target.value));
+        $('tz-select').addEventListener('change', (e) => setZone(e.target.value, { remember: true }));
         $('tz-toggle').addEventListener('click', () => setZone(state.zone === ownerZone ? detectedZone : ownerZone));
 
         $('duration-options').addEventListener('change', (e) => {
@@ -227,15 +227,30 @@ function init() {
             $('day-tabs').querySelector(`[data-day="${state.day}"]`)?.focus();
         });
 
+        $('day-tabs').addEventListener('keydown', (e) => {
+            const keys = { ArrowLeft: -1, ArrowRight: 1, Home: -7, End: 7 };
+            if (!(e.key in keys) || !e.target.closest('[data-day]')) return;
+            e.preventDefault();
+            state.day = Math.max(0, Math.min(6, state.day + keys[e.key]));
+            state.scrollToFirst = true;
+            refresh();
+            $('day-tabs').querySelector(`[data-day="${state.day}"]`)?.focus();
+        });
+
         narrow.addEventListener?.('change', refresh);
         form.addEventListener('submit', onSubmit);
     }
 
-    function setZone(zone) {
+    function setZone(zone, { remember = false } = {}) {
         if (!isValidTimeZone(zone)) return;
         state.zone = zone;
         $('tz-select').value = zone;
-        try { localStorage.setItem(ZONE_STORAGE_KEY, zone); } catch (e) { /* not essential */ }
+        if (remember) {
+            try {
+                if (zone === detectedZone) localStorage.removeItem(ZONE_STORAGE_KEY);
+                else localStorage.setItem(ZONE_STORAGE_KEY, zone);
+            } catch (e) { /* not essential */ }
+        }
         state.day = null;
         state.scrollToFirst = true;
         refresh();
@@ -305,9 +320,9 @@ function init() {
         const sameMonth = days[0].month === days[6].month;
         const month = sameMonth && !narrow.matches ? 'long' : 'short';
         $('week-label').textContent = `${formatDate(days[0], sameMonth ? { day: 'numeric' } : { day: 'numeric', month })} – ${formatDate(days[6], { day: 'numeric', month, year: 'numeric' })}`;
-        $('week-prev').disabled = state.week <= 0;
-        $('week-next').disabled = state.week >= maxWeek();
-        $('week-today').disabled = state.week === 0;
+        setDisabled($('week-prev'), state.week <= 0);
+        setDisabled($('week-next'), state.week >= maxWeek());
+        setDisabled($('week-today'), state.week === 0);
 
         const toggle = $('tz-toggle');
         if (state.zone !== ownerZone) {
@@ -317,6 +332,12 @@ function init() {
             toggle.textContent = 'Back to your time zone';
             toggle.hidden = detectedZone === ownerZone;
         }
+    }
+
+    // Disabling the focused button would drop focus to <body>; hand it to the week label first.
+    function setDisabled(button, disabled) {
+        if (disabled && document.activeElement === button) $('week-label').focus();
+        button.disabled = disabled;
     }
 
     function renderDayTabs(days, openDays) {
@@ -365,7 +386,7 @@ function init() {
         const statusAt = (rowIndex, d) => {
             const row = rows[rowIndex];
             if (!row || row.gap) return null;
-            return cellState(cells.get(`${d}:${row.minutes}`));
+            return cellState(cells.get(`${d}:${row.key}`));
         };
 
         const body = el('tbody');
@@ -377,10 +398,15 @@ function init() {
                         el('span', { text: `${formatClock(row.from)} – ${formatClock(row.to % 1440)}: no times available` }))));
                 return;
             }
-            const tr = el('tr', { class: row.minutes % 60 === 0 ? 'on-hour' : 'off-hour' },
-                el('th', { scope: 'row', class: 'time-label', text: formatClock(row.minutes) }));
+            const tr = el('tr', { class: row.minutes % 60 === 0 || row.repeat ? 'on-hour' : 'off-hour' },
+                el('th', {
+                    scope: 'row',
+                    class: 'time-label',
+                    text: row.repeat ? `${formatClock(row.minutes)} (2nd)` : formatClock(row.minutes),
+                    title: row.repeat ? 'Your clocks go back this night, so this hour happens twice' : null,
+                }));
             visible.forEach((d, c) => {
-                const slot = cells.get(`${d}:${row.minutes}`);
+                const slot = cells.get(`${d}:${row.key}`);
                 const status = statusAt(r, d);
                 const classes = [`cell`, `cell-${status}`];
                 if (statusAt(r - 1, d) !== status) classes.push('run-top');
@@ -470,7 +496,11 @@ function init() {
         const start = state.selection;
         const end = start + state.duration * MINUTE;
         const clear = el('button', { type: 'button', class: 'link-button', text: 'Clear' });
-        clear.addEventListener('click', () => { state.selection = null; refresh(); });
+        clear.addEventListener('click', () => {
+            state.selection = null;
+            refresh();
+            table.querySelector('button[tabindex="0"]')?.focus();
+        });
         box.append(el('div', { class: 'selection-card' },
             el('div', {},
                 el('p', { class: 'selection-when', text: formatWhen(start, end, state.zone) }),
@@ -603,8 +633,14 @@ function init() {
         }
     }
 
+    // Some mail apps (e.g. Outlook on Windows) reject very long mailto links, so a long message is
+    // left out of the link; the confirmation panel still shows the full text to copy.
     function mailtoUrl(request) {
-        return `mailto:${owner.email}?subject=${encodeURIComponent(request.subject)}&body=${encodeURIComponent(request.text)}`;
+        let body = request.text;
+        if (encodeURIComponent(body).length > 1800) {
+            body = `${request.text.split('\nMessage:\n')[0]}\nMessage: (too long for an email link: please paste it from the booking page)`;
+        }
+        return `mailto:${owner.email}?subject=${encodeURIComponent(request.subject)}&body=${encodeURIComponent(body)}`;
     }
 
     function showSent(request, mode) {

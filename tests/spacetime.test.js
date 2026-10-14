@@ -49,6 +49,8 @@ test('a steady pressure patch settles into a well whose depth matches -p_k / ome
     const expected = ref.sample(cx, cy);
 
     assert.ok(simulated < 0, 'pressure should push the sheet down');
+    // Settled under a steady pressure: the height has stopped changing, so the page can go idle
+    assert.ok(sim.rmsRate < 0.01, `still changing at ${sim.rmsRate} px/s`);
     assert.ok(Math.abs(simulated - expected) / Math.abs(expected) < 0.03, `${simulated} vs ${expected}`);
     // Far from the patch the sheet should be much flatter than in the well (1/r profile).
     const far = sim.sample(cx + 200, cy);
