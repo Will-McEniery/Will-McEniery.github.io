@@ -4,7 +4,7 @@
   "type": "module",
   "description": "Tooling for the Jekyll site: unit tests, calendar sync, and a no-Ruby local preview.",
   "scripts": {
-    "test": "node --test tests/",
+    "test": "node --test \"tests/*.test.js\"",
     "preview": "node scripts/preview.mjs",
     "sync-calendar": "node scripts/sync-calendar.mjs"
   },
