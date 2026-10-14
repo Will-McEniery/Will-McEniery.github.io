@@ -40,6 +40,12 @@ jobs:
       - name: Unit tests
         run: npm test
 
+      - name: Sync busy times from calendar
+        if: github.ref == 'refs/heads/main'
+        env:
+          CALENDAR_ICS_URL: ${{ secrets.CALENDAR_ICS_URL }}
+        run: npm run sync-calendar
+
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.3"
