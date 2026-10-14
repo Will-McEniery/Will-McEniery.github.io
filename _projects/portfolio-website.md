@@ -1,5 +1,4 @@
 ---
-layout: subpage
 title: Portfolio Website
 date: 2026-06-19
 categories: [Coding, Personal]

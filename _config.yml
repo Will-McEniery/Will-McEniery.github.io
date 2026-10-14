@@ -1,14 +1,49 @@
-title: Personal Website
-url: "https://will-mceniery.github.io" 
+title: Will McEniery
+tagline: Theoretical physics
+description: >-
+  Will McEniery — theoretical physics. Research notes, projects, CV, and a way to book a meeting.
+url: "https://will-mceniery.github.io"
+baseurl: ""
+lang: en_AU
 
-# Set up modular collections for your subpages
+author:
+  name: Will McEniery
+  email: wgsm2@cantab.ac.uk
+  linkedin: https://www.linkedin.com/in/Will-McEniery
+  arxiv: https://arxiv.org/abs/2604.26562
+
+# Content collections (each file becomes its own page)
 collections:
   projects:
     output: true
   interests:
     output: true
 
+# Front matter applied automatically, so individual files don't need to repeat it
+defaults:
+  - scope: { path: "", type: projects }
+    values: { layout: subpage, math: true }
+  - scope: { path: "", type: interests }
+    values: { layout: subpage, math: true }
+
 # Tell Kramdown to preserve LaTeX for MathJax
 markdown: kramdown
 kramdown:
   math_engine: mathjax
+
+# Both plugins are on the GitHub Pages allow-list
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - package.json
+  - package-lock.json
+  - scripts
+  - tests
+  - README.md
+  - PLAN.md

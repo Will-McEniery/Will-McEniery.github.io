@@ -1,12 +1,11 @@
-<div class="interactive-widget" style="margin: 2rem 0; padding: 1rem; background: var(--hover-bg); border: 1px solid var(--border); border-radius: 8px;">
-    <!-- Three.js will inject the 3D canvas into this container -->
-    <div id="spin-canvas-container" style="width: 100%; height: 400px; position: relative; overflow: hidden; border-radius: 4px; background: #111111;"></div>
-    
-    <!-- Controls -->
-    <div class="controls" style="margin-top: 1rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
-        <label for="precession-slider" style="font-weight: 500; white-space: nowrap;">
-            Axis of Precession ($\theta$): <strong id="theta-val">45&deg;</strong>
+<div class="interactive-widget">
+    <!-- Three.js injects the 3D canvas into this container -->
+    <div id="spin-canvas-container" class="widget-canvas"></div>
+
+    <div class="controls">
+        <label for="precession-slider">
+            Axis of precession ($\theta$): <strong id="theta-val">45&deg;</strong>
         </label>
-        <input type="range" id="precession-slider" min="5" max="85" value="45" style="width: 100%; cursor: pointer;">
+        <input type="range" id="precession-slider" min="5" max="85" value="45">
     </div>
 </div>

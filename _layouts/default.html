@@ -3,18 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ page.title }}</title>
+    {% include theme-init.html %}
+    {% seo %}
+    <link rel="icon" href="{{ '/assets/favicon.svg' | relative_url }}" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap">
     <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
-
-    {% include mathjax.html %}
+    {% if page.math %}{% include mathjax.html %}{% endif %}
 </head>
-<body>
-    <div class="container">
-        {% include navbar.html %}
-        <main>
-            {{ content }}
-        </main>
-    </div>
-    <script src="{{ '/assets/js/theme.js' | relative_url }}"></script>
+<body class="page-{{ page.page_class | default: 'default' }}">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <canvas id="spacetime" aria-hidden="true"></canvas>
+
+    {% include navbar.html %}
+
+    <main id="main" class="card">
+        {{ content }}
+    </main>
+
+    {% include footer.html %}
+
+    <script src="{{ '/assets/js/site.js' | relative_url }}"></script>
+    <script type="module" src="{{ '/assets/js/spacetime/main.js' | relative_url }}"></script>
 </body>
 </html>

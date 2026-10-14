@@ -1,6 +1,6 @@
 ---
-layout: subpage
 title: Test animation
+published: false # hidden from the site; set to true (or delete this line) to show it again
 date: 2026-07-17
 categories: [Theoretical Physics, Computational Methods]
 description: An interactive 3D simulation of spin precession in a uniform magnetic field.

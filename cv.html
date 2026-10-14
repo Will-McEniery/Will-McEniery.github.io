@@ -1,0 +1,45 @@
+---
+layout: default
+title: Curriculum Vitae
+description: CV of Will McEniery — education, research, publications, teaching and service.
+---
+<header class="cv-header">
+    <h1>Curriculum Vitae</h1>
+    <ul class="cv-contact">
+        <li><a href="mailto:{{ site.author.email }}">{{ site.author.email }}</a></li>
+        <li><a href="{{ site.author.linkedin }}" rel="noopener">linkedin.com/in/Will-McEniery</a></li>
+    </ul>
+</header>
+
+{% for block in site.data.cv %}
+<section class="cv-section">
+    <h2>{{ block.section }}</h2>
+    {%- for entry in block.entries %}
+    <div class="cv-entry">
+        {%- if entry.role or entry.org %}
+        <div class="cv-entry-head">
+            <h3>
+                {%- if entry.org and entry.role %}<span class="cv-org">{{ entry.org }}</span> <span class="cv-sep">|</span> {{ entry.role }}
+                {%- elsif entry.role %}{{ entry.role }}
+                {%- else %}{{ entry.org }}{% endif -%}
+            </h3>
+            {%- if entry.dates %}<span class="cv-dates">{{ entry.dates }}</span>{% endif %}
+        </div>
+        {%- endif %}
+        {%- if entry.place %}
+        <p class="cv-place">{{ entry.place }}</p>
+        {%- endif %}
+        {%- for line in entry.lines %}
+        <p class="cv-line">{{ line | markdownify | remove: '<p>' | remove: '</p>' | strip }}</p>
+        {%- endfor %}
+        {%- if entry.bullets %}
+        <ul>
+            {%- for bullet in entry.bullets %}
+            <li>{{ bullet | markdownify | remove: '<p>' | remove: '</p>' | strip }}</li>
+            {%- endfor %}
+        </ul>
+        {%- endif %}
+    </div>
+    {%- endfor %}
+</section>
+{% endfor %}

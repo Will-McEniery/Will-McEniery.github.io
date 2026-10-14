@@ -1,5 +1,4 @@
 ---
-layout: subpage
 title: Reservoir-mediated spin entanglement in the mean-force Gibbs state.
 date: 2026-05-29
 categories: [Research, Pre-print]

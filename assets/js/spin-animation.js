@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(container.clientWidth, container.clientHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     container.appendChild(renderer.domElement);
 
     // 2. Lighting
@@ -89,12 +89,17 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // 5. Animation Loop
+    // 5. Animation Loop (only runs while the widget is on screen and the tab is visible)
+    let onScreen = true;
+    let frameId = null;
+
     function animate() {
-        requestAnimationFrame(animate);
+        frameId = null;
+        if (!onScreen || document.hidden) return;
+        frameId = requestAnimationFrame(animate);
 
         // Advance azimuthal angle phi over time to simulate Larmor precession
-        phiRad += 0.03; 
+        phiRad += 0.03;
 
         // Calculate new vector direction
         const newDir = new THREE.Vector3(
@@ -109,6 +114,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
         renderer.render(scene, camera);
     }
+
+    function resume() {
+        if (frameId === null && onScreen && !document.hidden) animate();
+    }
+
+    if ('IntersectionObserver' in window) {
+        new IntersectionObserver((entries) => {
+            onScreen = entries[0].isIntersecting;
+            resume();
+        }).observe(container);
+    }
+    document.addEventListener('visibilitychange', resume);
     animate();
 
     // 6. Handle Window Resizing gracefully

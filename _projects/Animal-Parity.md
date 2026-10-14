@@ -1,5 +1,4 @@
 ---
-layout: subpage
 title: Animal Parity Group
 date: 2026-06-01
 categories: [Non-Profit]

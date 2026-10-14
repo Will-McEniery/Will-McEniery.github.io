@@ -1,15 +1,27 @@
 ---
 layout: default
 ---
-<div class="back-link">
-    <a href="#" onclick="history.back(); return false;">&larr; Back</a>
-</div>
+{%- if page.collection == 'interests' -%}
+    {%- assign parent_url = '/interests.html' -%}{%- assign parent_title = 'Research & Interests' -%}
+{%- else -%}
+    {%- assign parent_url = '/projects.html' -%}{%- assign parent_title = 'Projects' -%}
+{%- endif -%}
+<p class="back-link">
+    <a href="{{ parent_url | relative_url }}">&larr; {{ parent_title }}</a>
+</p>
 
-<article>
-    <h1>{{ page.title }}</h1>
-    
+<article class="prose">
+    <header class="article-header">
+        <h1>{{ page.title }}</h1>
+        <p class="article-meta">
+            <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%B %Y" }}</time>
+            {%- for cat in page.categories %}
+            <span class="tag">{{ cat }}</span>
+            {%- endfor %}
+        </p>
+    </header>
+
     {{ content }}
-    
 </article>
 
 {% if page.libraries %}

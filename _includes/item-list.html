@@ -1,0 +1,52 @@
+{%- comment -%}
+    Searchable, filterable list of a collection's entries, newest first.
+    Usage: {% include item-list.html collection="projects" noun="projects" %}
+{%- endcomment -%}
+{%- assign items = site[include.collection] | sort: "date" | reverse -%}
+{%- assign all_categories = "" | split: "" -%}
+{%- for item in items -%}
+    {%- for cat in item.categories -%}
+        {%- assign all_categories = all_categories | push: cat -%}
+    {%- endfor -%}
+{%- endfor -%}
+{%- assign all_categories = all_categories | uniq | sort -%}
+
+<div class="filter-controls" role="search">
+    <label class="visually-hidden" for="search-input">Search {{ include.noun }}</label>
+    <input type="search" id="search-input" placeholder="Search {{ include.noun }}…" autocomplete="off">
+    <label class="visually-hidden" for="category-filter">Filter by category</label>
+    <select id="category-filter">
+        <option value="all">All categories</option>
+        {%- for cat in all_categories %}
+        <option value="{{ cat | downcase | escape }}">{{ cat }}</option>
+        {%- endfor %}
+    </select>
+</div>
+
+<ul class="item-list">
+    {%- for item in items %}
+    {%- assign cats_text = item.categories | join: ' ' -%}
+    {%- capture search_text %}{{ item.title }} {{ item.description }} {{ cats_text }}{% endcapture %}
+    <li class="list-item"
+        data-search="{{ search_text | downcase | escape }}"
+        data-categories="{{ item.categories | join: '|' | downcase | escape }}">
+        <article>
+            <h2 class="item-title"><a href="{{ item.url | relative_url }}">{{ item.title }}</a></h2>
+            <time class="item-date" datetime="{{ item.date | date_to_xmlschema }}">{{ item.date | date: "%b %Y" }}</time>
+            {%- if item.description %}
+            <p class="item-description">{{ item.description }}</p>
+            {%- endif %}
+            {%- if item.categories %}
+            <div class="tags">
+                {%- for cat in item.categories %}
+                <button type="button" class="tag" data-category="{{ cat | downcase | escape }}">{{ cat }}</button>
+                {%- endfor %}
+            </div>
+            {%- endif %}
+        </article>
+    </li>
+    {%- endfor %}
+</ul>
+<p class="empty-state" id="no-results" hidden>Nothing matches that search.</p>
+
+<script src="{{ '/assets/js/filter.js' | relative_url }}" defer></script>

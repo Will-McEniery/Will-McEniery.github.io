@@ -1,46 +1,9 @@
 ---
 layout: default
 title: Projects
+description: Ongoing and past projects.
 ---
 <h1>Projects</h1>
-<p>Here is a list of my ongoing and past projects.</p>
+<p class="lede">Here is a list of my ongoing and past projects.</p>
 
-<div class="filter-controls">
-    <input type="text" id="search-input" placeholder="Search projects by keyword...">
-    <select id="category-filter">
-        <option value="all">All Categories</option>
-        {% assign all_categories = site.projects | map: "categories" | compact | flatten | uniq | sort %}
-        {% for category in all_categories %}
-            <option value="{{ category | downcase }}">{{ category }}</option>
-        {% endfor %}
-    </select>
-</div>
-
-<ul class="item-list">
-    {% for project in site.projects %}
-    <li class="list-item" 
-        data-title="{{ project.title | downcase }}" 
-        data-desc="{{ project.description | downcase }}" 
-        data-categories="{{ project.categories | join: ',' | downcase | default: 'none' }}">
-        
-        <a href="{{ project.url | relative_url }}">
-            <h3>
-                {{ project.title }}
-                <span class="date">{{ project.date | date: "%B %Y" }}</span>
-            </h3>
-
-            <p class="description">{{ project.description }}</p>
-            
-            {% if project.categories %}
-                <div class="tags-container">
-                    {% for cat in project.categories %}
-                        <span class="category-tag">{{ cat }}</span>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        </a>
-    </li>
-    {% endfor %}
-</ul>
-
-<script src="{{ '/assets/js/filter.js' | relative_url }}"></script>
+{% include item-list.html collection="projects" noun="projects" %}

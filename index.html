@@ -1,7 +1,49 @@
 ---
 layout: default
 title: Home
+page_class: home
 ---
-<h1>Welcome</h1>
-<p>Hi, I'm Will and welcome to my website. It's very under construction at the moment.</p>
-<p>The general vision for this website and the written content is my own (unless otherwise indicated), but AI has been used to expediate the formatting and animations on the pages. </p>
+{%- assign latest_interest = site.interests | sort: "date" | last -%}
+{%- assign latest_project = site.projects | sort: "date" | last -%}
+<section class="hero">
+    <p class="eyebrow">Theoretical physics</p>
+    <h1 class="hero-title">Will McEniery</h1>
+    <p class="hero-sub">MASt in Mathematics (Part III), University of Cambridge &middot; BAdvSc (Hons), University of Queensland</p>
+</section>
+
+<div class="prose">
+    <h2>Welcome</h2>
+    <p>Hi, I'm Will and welcome to my website. It's very under construction at the moment.</p>
+    <p>The general vision for this website and the written content is my own (unless otherwise indicated), but AI has been used to expedite the formatting and animations on the pages.</p>
+</div>
+
+<ul class="link-grid">
+    <li>
+        <a class="link-card" href="{{ '/interests.html' | relative_url }}">
+            <span class="link-card-title">Research &amp; Interests</span>
+            {%- if latest_interest %}
+            <span class="link-card-body">Latest: {{ latest_interest.title }}</span>
+            {%- endif %}
+        </a>
+    </li>
+    <li>
+        <a class="link-card" href="{{ '/projects.html' | relative_url }}">
+            <span class="link-card-title">Projects</span>
+            {%- if latest_project %}
+            <span class="link-card-body">Latest: {{ latest_project.title }}</span>
+            {%- endif %}
+        </a>
+    </li>
+    <li>
+        <a class="link-card" href="{{ '/cv.html' | relative_url }}">
+            <span class="link-card-title">CV</span>
+            <span class="link-card-body">Education, research, teaching and service.</span>
+        </a>
+    </li>
+    <li>
+        <a class="link-card link-card-accent" href="{{ '/book.html' | relative_url }}">
+            <span class="link-card-title">Book a meeting</span>
+            <span class="link-card-body">See when I'm free in your time zone and send a request.</span>
+        </a>
+    </li>
+</ul>

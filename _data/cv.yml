@@ -1,0 +1,136 @@
+# Content for /cv.html. Each section is a heading; each entry is a block under it.
+# Fields: org, role, place (shown under the heading), dates, lines (short facts), bullets.
+
+- section: Education
+  entries:
+    - role: MASt in Mathematics (Part III), Theoretical Physics
+      place: The University of Cambridge
+      dates: Oct 2025 – Jul 2026
+      lines:
+        - "**Grade:** 78/100 – *Distinction*"
+        - "**Scholarships and prizes:** Homerton College Master's Prize."
+        - "**Examined in:** QFT, GR, AQFT, 'The Standard Model', and 'Solitons, Instantons and Geometry'."
+        - "**Essay:** 'Chiral Symmetry on the Lattice', supervised by David Tong."
+    - role: BAdvSc (Honours), Physics Specialisation with Mathematics Minor
+      place: The University of Queensland
+      dates: Feb 2021 – Jul 2025
+      lines:
+        - "**GPA:** 6.903 / 7 – *1st Class Honours*"
+        - "**Scholarships and prizes:** University Medal for 2025, Vice-Chancellor's Scholarship (Academic Excellence), Maude Walker Prize for Greatest Proficiency in 1st or 2nd year courses, Quantum and Advanced Technologies Honours Scholarship, Dean's Commendation (×8)."
+
+- section: Research experience
+  entries:
+    - org: University of Queensland
+      role: Honours Thesis
+      dates: Jul 2024 – Jul 2025
+      lines:
+        - "**Supervisor:** Prof. Ben Powell"
+      bullets:
+        - Self-directed research culminating in a thesis **predicting Raman scattering off RVB spin liquid states**.
+        - Wrote **custom C++ code** for self-consistent equations and analytically intractable calculations.
+        - Presented a poster at the AIP annual Condensed Matter and Materials conference in February 2025.
+    - org: University of Queensland
+      role: Summer Research Student / Research Assistant
+      dates: Dec 2023 – Feb 2024
+      lines:
+        - "**Supervisors:** Prof. Matthew Davis and Dr. Lewis Williamson"
+      bullets:
+        - Predicting the **degree of entanglement in a thermal gas** using the mean-force Gibbs state formalism.
+        - Gave a 20-minute talk at the Quantum Thermodynamics Down Under conference in November 2024.
+        - "**Preprint submitted:** see publications."
+    - org: University of Queensland
+      role: Summer Research Student
+      dates: Nov 2022 – Jan 2023
+      lines:
+        - "**Supervisor:** Dr. Charles Woffinden"
+      bullets:
+        - Experimental **optics** and **software** work in the Bose–Einstein Condensates Laboratory.
+        - Wrote code in **MATLAB** and **Arduino** to control lenses and interface digital and analogue devices.
+        - Wrote two programs to **automatically focus lasers onto Bose–Einstein condensates**.
+
+- section: Publications
+  entries:
+    - bullets:
+        - "L. A. Williamson, **W. McEniery**, F. Cerisola, and J. Anders, “Reservoir-mediated spin entanglement in the mean-force Gibbs state,” [arXiv:2604.26562](https://arxiv.org/abs/2604.26562) [quant-ph] (2026), submitted to *npj Quantum Information*."
+
+- section: Teaching experience
+  entries:
+    - org: University of Queensland
+      role: Casual Academic
+      dates: Jul 2024 – Sep 2025
+      bullets:
+        - Taught 2nd-year undergraduate vector calculus and ODE classes in the mathematics department, and provided general tutelage in quantum mechanics and relativity for the physics department.
+    - org: Brisbane Grammar School
+      role: Casual Tutor
+      dates: Jan 2021 – Sep 2025
+      bullets:
+        - Tutored high-school students in grades 9–12 in Mathematics, Physics, and Chemistry for Brisbane Grammar School's Extended Day Study Program.
+    - org: St John's College
+      role: Casual Tutor
+      dates: Feb 2022 – Jan 2025
+      bullets:
+        - Taught 1st-year calculus and statistics to students at St John's College within the University of Queensland.
+
+- section: Leadership, volunteering, and service
+  entries:
+    - org: UQ Science Students' Society
+      role: Treasurer
+      dates: Dec 2023 – Dec 2025
+      bullets:
+        - Elected in two consecutive years, during which time I managed the club's finances and general operation.
+        - Organised social and academic events for members, collaborating with other societies and industry partners.
+    - org: The Common Good
+      role: Ekka Scooper Volunteer
+      dates: Aug 2024
+      bullets:
+        - Volunteered to make and sell strawberry sundaes for charity.
+    - org: St John's College
+      role: Student Report Editor
+      dates: Jan 2023 – Nov 2023
+      bullets:
+        - Collated and reviewed 57 of 104 reports for the student magazine with a co-editor.
+    - org: St John's College
+      role: Recycling Committee
+      dates: Jan 2023 – Nov 2023
+      bullets:
+        - Regularly collected and organised recyclables for a student-founded initiative.
+        - Planned bin placement and promoted awareness at college events.
+    - org: St Joseph's College
+      role: Eddie's Van
+      dates: Jul 2021 – Jul 2023
+      bullets:
+        - Volunteered weekly to serve food to the homeless population in Brisbane.
+    - org: Wings for Life
+      role: Wings for Life World Run
+      dates: May 2022
+      bullets:
+        - Ran 12.16 km to raise money for spinal cord research.
+    - org: Emergency Volunteer Crew
+      role: Mud Army 2.0
+      dates: Mar 2022
+      bullets:
+        - Volunteered to clean up flood-damaged apartments in St Lucia after the 2022 Brisbane floods.
+
+- section: Extracurricular interests
+  entries:
+    - org: Homerton College Boat Club
+      role: Rower
+      dates: Sep 2025 – Jun 2026
+      bullets:
+        - Trained 2–3 times per week on top of academic workload.
+        - Raced in the 2025 HORR with the M1 crew and won blades in the 2026 May Bumps with the M2 crew.
+    - org: GH Singing Studio
+      role: Vocal Student
+      dates: Jan 2024 – Jan 2025
+      bullets:
+        - Performed in two concerts as part of my vocal tutelage.
+    - org: St John's College
+      role: Choir Member
+      dates: Feb 2021 – Nov 2023
+      bullets:
+        - Performed with the St John's College choir at church services and other college events.
+    - org: Voices of Birralee
+      role: Choir Member
+      dates: Jan 2021 – Dec 2021
+      bullets:
+        - Sang with the Voices of Birralee at a variety of events.
