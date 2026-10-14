@@ -29,6 +29,15 @@ for (const file of htmlFiles) {
     if (/\{\{|\{%/.test(html.replace(/<script type="application\/json"[\s\S]*?<\/script>/g, ''))) {
         errors.push(`${rel}: unrendered Liquid`);
     }
+    // Data embedded for scripts (e.g. the booking settings) must be valid JSON
+    for (const match of html.matchAll(/<script id="([^"]+)" type="application\/json">([\s\S]*?)<\/script>/g)) {
+        try {
+            const data = JSON.parse(match[2]);
+            if (match[1] === 'booking-config' && !(data && data.timezone && data.weekly)) errors.push(`${rel}: booking settings missing timezone/weekly`);
+        } catch (err) {
+            errors.push(`${rel}: #${match[1]} is not valid JSON (${err.message})`);
+        }
+    }
     for (const match of html.matchAll(/(?:href|src)="(\/[^"#?]*)/g)) {
         const url = match[1];
         if (url.startsWith('//')) continue;
