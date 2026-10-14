@@ -1,0 +1,112 @@
+---
+layout: default
+title: Book a meeting
+description: See when I'm free in your own time zone and send a request for a call or a meeting.
+page_class: book
+styles: [booking.css]
+---
+{%- assign owner = site.data.booking.owner_name | default: "Will" -%}
+<h1>Book a meeting</h1>
+<p class="lede">Pick a time that suits you and send a request for a video call, a phone call or a meeting in person. Nothing is booked until I confirm by email, and we can always adjust the details there.</p>
+
+<noscript>
+    <p class="notice">The booking timetable needs JavaScript. You can email me at <a href="mailto:{{ site.author.email }}">{{ site.author.email }}</a> instead.</p>
+</noscript>
+
+<div class="booking" id="booking" hidden>
+    <section class="booking-step" aria-labelledby="step-when">
+        <h2 id="step-when" class="step-title"><span class="step-number" aria-hidden="true">1</span> Choose a time</h2>
+
+        <div class="booking-toolbar">
+            <div class="field field-zone">
+                <label for="tz-select">Times shown in</label>
+                <div class="zone-row">
+                    <select id="tz-select"></select>
+                    <button type="button" class="link-button" id="tz-toggle"></button>
+                </div>
+            </div>
+            <div class="field">
+                <span class="field-label" id="duration-label">Length</span>
+                <div class="segmented" role="radiogroup" aria-labelledby="duration-label" id="duration-options"></div>
+            </div>
+        </div>
+
+        <div class="week-nav">
+            <button type="button" class="icon-button" id="week-prev" aria-label="Previous week">
+                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <h3 class="week-label" id="week-label" aria-live="polite"></h3>
+            <button type="button" class="icon-button" id="week-next" aria-label="Next week">
+                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button type="button" class="button button-quiet button-small" id="week-today">This week</button>
+        </div>
+
+        <div class="day-tabs" id="day-tabs" role="tablist" aria-label="Day" hidden></div>
+
+        <div class="grid-wrap" id="grid-wrap">
+            <table class="week-grid" id="week-grid" aria-describedby="grid-help"></table>
+        </div>
+        <p class="grid-empty" id="grid-empty" hidden></p>
+
+        <div class="grid-footer">
+            <ul class="legend" aria-label="Key">
+                <li><span class="swatch swatch-open" aria-hidden="true"></span>Available</li>
+                <li><span class="swatch swatch-busy" aria-hidden="true"></span>Busy</li>
+                <li><span class="swatch swatch-off" aria-hidden="true"></span>Unavailable</li>
+            </ul>
+            <p class="grid-help" id="grid-help">Use the arrow keys to move between times.</p>
+        </div>
+    </section>
+
+    <section class="booking-step" aria-labelledby="step-details">
+        <h2 id="step-details" class="step-title"><span class="step-number" aria-hidden="true">2</span> Your details</h2>
+
+        <div class="selection" id="selection" aria-live="polite"></div>
+
+        <form id="booking-form" class="booking-form" novalidate>
+            <div class="form-grid">
+                <div class="field">
+                    <label for="f-name">Name</label>
+                    <input id="f-name" name="name" type="text" autocomplete="name" required maxlength="120">
+                </div>
+                <div class="field">
+                    <label for="f-email">Email</label>
+                    <input id="f-email" name="email" type="email" autocomplete="email" required maxlength="200">
+                </div>
+            </div>
+
+            <fieldset class="field">
+                <legend>Type of meeting</legend>
+                <div class="choice-list" id="type-options"></div>
+            </fieldset>
+
+            <div class="field">
+                <label for="f-topic">What's it about? <span class="optional">(optional)</span></label>
+                <input id="f-topic" name="topic" type="text" maxlength="200">
+            </div>
+            <div class="field">
+                <label for="f-message">Anything else? <span class="optional">(optional)</span></label>
+                <textarea id="f-message" name="message" rows="4" maxlength="3000"></textarea>
+            </div>
+
+            <!-- Left empty by people; bots tend to fill it in -->
+            <div class="honeypot" aria-hidden="true">
+                <label for="f-website">Leave this empty</label>
+                <input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off">
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="button" id="submit-button">Send request</button>
+                <p class="form-status" id="form-status" role="status"></p>
+            </div>
+        </form>
+    </section>
+
+    <p class="sync-note" id="sync-note" hidden></p>
+</div>
+
+<script id="booking-config" type="application/json">{{ site.data.booking | jsonify }}</script>
+<script id="booking-busy" type="application/json">{{ site.data.busy | jsonify }}</script>
+<script id="booking-owner" type="application/json">{"email": {{ site.author.email | jsonify }}, "name": {{ owner | jsonify }}}</script>
+<script type="module" src="{{ '/assets/js/booking/app.js' | relative_url }}"></script>

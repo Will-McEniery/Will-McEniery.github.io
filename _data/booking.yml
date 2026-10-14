@@ -1,0 +1,54 @@
+# Settings for the "Book a meeting" page (/book.html).
+#
+# Everything here is in YOUR time zone. Visitors see it converted to theirs automatically,
+# including daylight-saving changes on either side.
+
+owner_name: Will
+timezone: Australia/Brisbane   # IANA name, e.g. Europe/London, America/New_York, Asia/Tokyo
+
+slot_minutes: 30               # size of each block in the timetable
+durations: [30, 60]            # meeting lengths people can ask for (multiples of slot_minutes)
+min_notice_hours: 24           # earliest someone can request is this far from now
+horizon_weeks: 6               # how far ahead people can look
+
+# When you're generally free, by day of the week, as 24-hour "HH:MM-HH:MM" ranges.
+# Leave a day out (or give it []) to close it completely.
+weekly:
+  mon: ["09:00-12:30", "13:30-17:00"]
+  tue: ["09:00-12:30", "13:30-17:00"]
+  wed: ["09:00-12:30", "13:30-17:00"]
+  thu: ["09:00-12:30", "13:30-17:00"]
+  fri: ["09:00-12:30", "13:30-16:00"]
+  sat: []
+  sun: []
+
+# One-off closures. Whole days ("YYYY-MM-DD", end date inclusive) or exact times ("YYYY-MM-DD HH:MM").
+blocked: []
+#  - start: "2026-12-24"
+#    end: "2026-12-28"
+#  - start: "2026-11-03 14:00"
+#    end: "2026-11-03 16:30"
+
+# One-off extra openings outside the weekly hours (same formats as above).
+extra: []
+#  - start: "2026-11-07 10:00"
+#    end: "2026-11-07 12:00"
+
+meeting_types:
+  - id: video
+    label: Video call
+    note: I'll send a link.
+  - id: phone
+    label: Phone call
+  - id: in-person
+    label: In person
+    note: We'll agree on a place by email.
+
+# Where requests go.
+#   provider: email      -> the visitor's own email app opens with the request filled in (no setup)
+#   provider: web3forms  -> sent straight to your inbox; key = your Web3Forms access key
+#   provider: formspree  -> sent straight to your inbox; key = your Formspree form ID (e.g. "xyzabcd")
+# See README.md for the two-minute setup. The key is designed to be public, so it's fine here.
+form:
+  provider: email
+  key: ""
