@@ -11,7 +11,7 @@ hosted on GitHub Pages. The background is a small interactive simulation of a sh
 | Projects | one Markdown file per project in `_projects/` |
 | Research & interests | one Markdown file per note in `_interests/` |
 | CV | `_data/cv.yml` (the page `cv.html` is generated from it) |
-| Footer links, email, site title | `_config.yml` |
+| Contact email (used everywhere, incl. booking requests), footer links, site title | `_config.yml` |
 | Meeting availability | `_data/booking.yml` (see below) |
 
 A project or note looks like this:
@@ -50,7 +50,7 @@ request filled in, addressed to you. To have requests arrive directly without th
 these free form services:
 
 - **Web3Forms** (250 requests/month free, no account needed): go to <https://web3forms.com>, enter the
-  address requests should go to, and you'll be emailed an access key. In `_data/booking.yml` set
+  address requests should go to (williammceniery@gmail.com), and you'll be emailed an access key. In `_data/booking.yml` set
   `provider: web3forms` and `key: "<that key>"`.
 - **Formspree** (50/month free, needs an account): create a form at <https://formspree.io>, then set
   `provider: formspree` and `key: "<form id>"` (the part after `/f/` in its URL).
