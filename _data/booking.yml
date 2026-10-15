@@ -50,5 +50,5 @@ meeting_types:
 #   provider: formspree  -> sent straight to your inbox; key = your Formspree form ID (e.g. "xyzabcd")
 # See README.md for the two-minute setup. The key is designed to be public, so it's fine here.
 form:
-  provider: email
-  key: ""
+  provider: web3forms
+  key: "81a0dbe2-a52e-4eee-b987-c2baf6429f6e"   # Web3Forms access key (public by design)

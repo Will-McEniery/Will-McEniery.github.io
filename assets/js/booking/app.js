@@ -113,7 +113,25 @@ function init() {
     buildTypeOptions();
     bindEvents();
     showSyncNote();
+    state.week = firstWeekWithOpenings();
     refresh();
+
+    // Late in the week everything left may be inside the notice period, so open on the first
+    // week that actually has a free time rather than an empty timetable.
+    function firstWeekWithOpenings() {
+        const now = Date.now();
+        for (let week = 0; week <= maxWeek(); week++) {
+            const days = weekDays(week);
+            const slots = generateSlots(config, {
+                from: startOfDay(days[0], state.zone),
+                to: startOfDay(addDays(days[6], 1), state.zone),
+                now,
+                busy,
+            });
+            if (slots.some((s) => s.status === 'open')) return week;
+        }
+        return 0;
+    }
 
     // ------------------------------------------------------------ setup helpers
 
